@@ -175,7 +175,7 @@ Development Setup
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/cryptologin.git
+git clone https://github.com/erabytse/CryptoLogin.git
 cd cryptologin
 
 # Install dev dependencies
@@ -214,7 +214,7 @@ python run.py
 
 📞 Contact
 
-- 📧 Email: contact@cryptologin.io
+- 📧 Email: contact@fbfconsulting.org
 
 - 🐦 Twitter: @cryptologin
 
@@ -223,8 +223,10 @@ python run.py
 #
 
 <div align="center">
-Built with ❤️ by the CryptoLogin Team by Erabytse
+Built with ❤️ by Erabytse
 
 Reinventing Authentication. One Secret at a Time.
+
+A quiet rebellion against digital waste.
 
 </div>
