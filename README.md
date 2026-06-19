@@ -88,21 +88,23 @@ data = auth.get_user_data(user_id, master_secret)
 print(data)  # {"name": "John Doe", "email": "john@example.com"}
 ```
 
-🏗️ Architecture
+## 🏗️ Architecture
 
+```text
 ┌─────────────────────────────────────────────────────────────────┐
-│ CRYPTOLOGIN │
+│ CRYPTOLOGIN                                                     │
 ├─────────────────────────────────────────────────────────────────┤
-│ │
-│ [USER] → [API] → [UserManager] → [Data Vault] → [Storage] │
-│ │
-│ 🔐 AES-256-GCM + Argon2id + SecureBuffer │
-│ 🚫 Zero-Knowledge Architecture │
-│ ⚡ FastAPI + SQLite/PostgreSQL │
-│ │
+│                                                                 │
+│ [USER] → [API] → [UserManager] → [Data Vault] → [Storage]       │
+│                                                                 │
+│ 🔐 AES-256-GCM + Argon2id + SecureBuffer                       |
+│ 🚫 Zero-Knowledge Architecture                                  │
+│ ⚡ FastAPI + SQLite/PostgreSQL                                  │
+│                                                                 │
 └─────────────────────────────────────────────────────────────────┘
+```
 
-🔒 Security Model
+## 🔒 Security Model
 
 How It Works
 
