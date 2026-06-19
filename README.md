@@ -90,13 +90,17 @@ print(data)  # {"name": "John Doe", "email": "john@example.com"}
 
 🏗️ Architecture
 
-    CRYPTOLOGIN
-
-    [USER] → [API] → [UserManager] → [Data Vault] → [Storage]
-
-    🔐 AES-256-GCM + Argon2id + SecureBuffer
-    🚫 Zero-Knowledge Architecture
-    ⚡ FastAPI + SQLite/PostgreSQL
+┌─────────────────────────────────────────────────────────────────┐
+│ CRYPTOLOGIN │
+├─────────────────────────────────────────────────────────────────┤
+│ │
+│ [USER] → [API] → [UserManager] → [Data Vault] → [Storage] │
+│ │
+│ 🔐 AES-256-GCM + Argon2id + SecureBuffer │
+│ 🚫 Zero-Knowledge Architecture │
+│ ⚡ FastAPI + SQLite/PostgreSQL │
+│ │
+└─────────────────────────────────────────────────────────────────┘
 
 🔒 Security Model
 
