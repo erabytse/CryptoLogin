@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🔐 CryptoLogin
+# ![Zero-Knowledge Authentication System](logo.png)
 
 ## _Zero-Knowledge Authentication System_
 
@@ -12,6 +12,10 @@
 [![Tests](https://github.com/yourusername/cryptologin/actions/workflows/ci.yml/badge.svg)](https://github.com/yourusername/cryptologin/actions)
 [![Security](https://img.shields.io/badge/Security-Military%20Grade-red.svg)](SECURITY.md)
 [![Stars](https://img.shields.io/github/stars/yourusername/cryptologin.svg)](https://github.com/yourusername/cryptologin)
+
+## The time is now ripe for it
+
+<video controls src="clip.mp4" title="The time is now ripe for it"></video>
 
 </div>
 
@@ -98,8 +102,8 @@ print(data)  # {"name": "John Doe", "email": "john@example.com"}
 │ [USER] → [API] → [UserManager] → [Data Vault] → [Storage]       │
 │                                                                 │
 │ 🔐 AES-256-GCM + Argon2id + SecureBuffer                       |
-│ 🚫 Zero-Knowledge Architecture                                  │
-│ ⚡ FastAPI + SQLite/PostgreSQL                                  │
+│ 🚫 Zero-Knowledge Architecture                                 |
+│ ⚡ FastAPI + SQLite/PostgreSQL                                 |
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
