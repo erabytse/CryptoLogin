@@ -8,14 +8,16 @@
 
 [![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-green.svg)](LICENSE)
-[![PyPI](https://img.shields.io/pypi/v/cryptologin.svg)](https://pypi.org/project/cryptologin/)
-[![Tests](https://github.com/yourusername/cryptologin/actions/workflows/ci.yml/badge.svg)](https://github.com/yourusername/cryptologin/actions)
+[![PyPI](https://img.shields.io/pypi/v/CryptoLogin.svg)](https://pypi.org/project/cryptologin/)
+[![Tests](https://github.com/erabytse/CryptoLogin/actions/workflows/ci.yml/badge.svg)](https://github.com/erabytse/CryptoLogin/actions)
 [![Security](https://img.shields.io/badge/Security-Military%20Grade-red.svg)](SECURITY.md)
-[![Stars](https://img.shields.io/github/stars/yourusername/cryptologin.svg)](https://github.com/yourusername/cryptologin)
+[![Stars](https://img.shields.io/github/stars/erabytse/CryptoLogin.svg)](https://github.com/yourusername/cryptologin)
 
 ## The time is now ripe for it
 
 <video controls src="clip.mp4" width="320" height="240" title="The time is now ripe for it"></video>
+
+https://github.com/user-attachments/assets/65844afd-5b7a-45df-9af9-84df5961ff88
 
 </div>
 
@@ -64,7 +66,7 @@
 pip install cryptologin
 
 # Or install from source
-git clone https://github.com/yourusername/cryptologin.git
+git clone https://github.com/erabytse/CryptoLogin.git
 cd cryptologin
 pip install -e .
 ```
