@@ -15,9 +15,7 @@
 
 ## The time is now ripe for it
 
-https://github.com/user-attachments/assets/65844afd-5b7a-45df-9af9-84df5961ff88
-
-
+<video controls src="clip.mp4" width="320" height="240" title="The time is now ripe for it"></video>
 
 https://github.com/user-attachments/assets/65844afd-5b7a-45df-9af9-84df5961ff88
 
