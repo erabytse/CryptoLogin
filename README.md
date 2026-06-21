@@ -15,7 +15,10 @@
 
 ## The time is now ripe for it
 
-<video controls src="images/clip.mp4" width="320" height="240" title="The time is now ripe for it"></video>
+<video controls  width="320" height="240">
+    <source src="clip.mp4" type="video/mp4">
+</video>
+
 
 </div>
 
