@@ -15,9 +15,8 @@
 
 ## The time is now ripe for it
 
-<video controls  width="320" height="240">
-    <source src="clip.mp4" type="video/mp4">
-</video>
+https://github.com/user-attachments/assets/65844afd-5b7a-45df-9af9-84df5961ff88
+
 
 
 </div>
