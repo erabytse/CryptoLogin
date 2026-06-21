@@ -15,7 +15,7 @@
 
 ## The time is now ripe for it
 
-<video controls src="clip.mp4" title="The time is now ripe for it"></video>
+<video controls src="images/clip.mp4" title="The time is now ripe for it"></video>
 
 </div>
 
