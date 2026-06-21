@@ -8,7 +8,7 @@
 
 [![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-green.svg)](LICENSE)
-[![PyPI](https://img.shields.io/pypi/v/CryptoLogin.svg)](https://pypi.org/project/CryptoLogin/)
+[![PyPI](https://img.shields.io/pypi/v/cryptologin.svg)](https://pypi.org/project/cryptologin/)
 [![Tests](https://github.com/erabytse/CryptoLogin/actions/workflows/ci.yml/badge.svg)](https://github.com/erabytse/CryptoLogin/actions)
 [![Security](https://img.shields.io/badge/Security-Military%20Grade-red.svg)](SECURITY.md)
 [![Stars](https://img.shields.io/github/stars/erabytse/CryptoLogin.svg)](https://github.com/yourusername/cryptologin)
