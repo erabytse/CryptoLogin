@@ -8,16 +8,14 @@
 
 [![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-green.svg)](LICENSE)
-[![PyPI](https://img.shields.io/pypi/v/CryptoLogin.svg)](https://pypi.org/project/cryptologin/)
+[![PyPI](https://img.shields.io/pypi/v/CryptoLogin.svg)](https://pypi.org/project/CryptoLogin/)
 [![Tests](https://github.com/erabytse/CryptoLogin/actions/workflows/ci.yml/badge.svg)](https://github.com/erabytse/CryptoLogin/actions)
 [![Security](https://img.shields.io/badge/Security-Military%20Grade-red.svg)](SECURITY.md)
 [![Stars](https://img.shields.io/github/stars/erabytse/CryptoLogin.svg)](https://github.com/yourusername/cryptologin)
 
 ## The time is now ripe for it
 
-<video controls src="clip.mp4" width="320" height="240" title="The time is now ripe for it"></video>
-
-https://github.com/user-attachments/assets/65844afd-5b7a-45df-9af9-84df5961ff88
+<img src="images/CryptoLogin.gif" width="320" height="170" alt="CryptoLogin"/>
 
 </div>
 
