@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "cryptologin"
-version = "1.0.0"
+version = "1.1.0"
 description = "Zero-Knowledge Authentication System - No Email, No Password, Just Your Secret"
 readme = {file = "README.md", content-type = "text/markdown; charset=UTF-8"}
 requires-python = ">=3.10"
@@ -70,7 +70,7 @@ full = [
 ]
 
 [project.urls]
-Homepage = "https://cryptologin.io"
+Homepage = "https://erabytse.github.io/cryptologin-website/"
 Documentation = "https://docs.cryptologin.io"
 Repository = "https://github.com/erabytse/CryptoLogin"
 Issues = "https://github.com/erabytse/CryptoLogin.git/issues"
