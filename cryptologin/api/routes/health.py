@@ -14,7 +14,7 @@ router = APIRouter(prefix="/health", tags=["Health"])
 
 
 class HealthResponse(BaseModel):
-    """Réponse de santé."""
+    """Health response."""
     status: str
     version: str
     timestamp: str
@@ -23,7 +23,7 @@ class HealthResponse(BaseModel):
 
 
 class ReadyResponse(BaseModel):
-    """Réponse de disponibilité."""
+    """Ready response."""
     ready: bool
     database: bool
 
@@ -32,7 +32,7 @@ class ReadyResponse(BaseModel):
 async def health_check(
     settings: Settings = Depends(get_settings)
 ) -> Any:
-    """Vérifie l'état de santé de l'application."""
+    """Check the health status of the application."""
     return HealthResponse(
         status="healthy",
         version=settings.APP_VERSION,
@@ -46,7 +46,7 @@ async def health_check(
 async def ready_check(
     storage: SQLiteStorage = Depends(get_storage)
 ) -> Any:
-    """Vérifie si l'application est prête à servir."""
+    """Check if the application is ready to serve requests."""
     try:
         storage.get_user_count()
         db_ready = True

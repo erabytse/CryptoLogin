@@ -1,5 +1,5 @@
 """
-Dépendances pour l'API CryptoLogin
+Dependencies for the CryptoLogin API
 """
 from typing import Optional
 from fastapi import Request, HTTPException, status, Depends
@@ -23,7 +23,7 @@ _storage_instance = None
 # ============================================================
 
 def get_storage(settings: Settings = Depends(get_settings)) -> SQLiteStorage:
-    """Retourne l'instance de stockage (Singleton)."""
+    """Returns the storage instance (Singleton)."""
     global _storage_instance
     if _storage_instance is None:
         db_path = settings.DATABASE_URL.replace("sqlite:///", "")
@@ -36,7 +36,7 @@ def get_storage(settings: Settings = Depends(get_settings)) -> SQLiteStorage:
 # ============================================================
 
 def get_user_manager(storage: SQLiteStorage = Depends(get_storage)) -> UserManager:
-    """Retourne l'instance du UserManager (Singleton)."""
+    """Returns the UserManager instance (Singleton)."""
     global _user_manager_instance
     if _user_manager_instance is None:
         _user_manager_instance = UserManager(storage=storage, session_duration_hours=24)
@@ -56,7 +56,7 @@ async def get_current_user(
     user_manager: UserManager = Depends(get_user_manager)
 ) -> str:
     """
-    Valide la session et retourne l'ID utilisateur.
+    Validates the session and returns the user ID.
     """
     if not credentials:
         raise HTTPException(
@@ -86,13 +86,13 @@ limiter = Limiter(key_func=get_remote_address)
 
 
 def get_limiter() -> Limiter:
-    """Retourne l'instance du rate limiter."""
+    """Returns the rate limiter instance."""
     return limiter
 
 
 def rate_limit_exceeded_handler(request: Request, exc: RateLimitExceeded) -> JSONResponse:
     """
-    Gestionnaire personnalisé pour les erreurs de rate limiting.
+    Custom handler for rate limiting errors.
     """
     return JSONResponse(
         status_code=status.HTTP_429_TOO_MANY_REQUESTS,
@@ -107,7 +107,7 @@ def rate_limit_exceeded_handler(request: Request, exc: RateLimitExceeded) -> JSO
 
 # Réinitialiser les singletons pour les tests
 def reset_singletons():
-    """Réinitialise les singletons (pour les tests)."""
+    """Resets the singletons (for testing)."""
     global _user_manager_instance, _storage_instance
     _user_manager_instance = None
     _storage_instance = None

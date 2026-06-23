@@ -54,20 +54,20 @@ app = FastAPI(
     description="""
     ## CryptoLogin - Zero-Knowledge Authentication System
     
-    **CryptoLogin** est un système d'authentification sans mot de passe
-    basé sur le concept de "zero-knowledge".
+    **CryptoLogin** is a passwordless authentication system
+    based on the concept of "zero-knowledge".
     
-    ### Principes clés:
-    - **Zero-Knowledge**: Le serveur ne connaît jamais votre secret
-    - **Cryptographie militaire**: AES-256-GCM + Argon2id
-    - **Données chiffrées**: Vault protégé par votre secret
-    - **Sessions sécurisées**: Durée de vie configurable
+    ### Key Principles:
+    - **Zero-Knowledge**: The server never knows your secret
+    - **Military-Grade Cryptography**: AES-256-GCM + Argon2id
+    - **Encrypted Data**: Vault protected by your secret
+    - **Secure Sessions**: Configurable lifespan
     
-    ### Flux d'authentification:
-    1. `/register` - Enregistrement
-    2. `/login/init` - Obtention du challenge
-    3. `/login/verify` - Vérification et création de session
-    4. Accès aux ressources avec le session_id
+    ### Authentication Flow:
+    1. `/register` - Registration
+    2. `/login/init` - Obtain Challenge
+    3. `/login/verify` - VVerification and Session Creation
+    4. Access Resources with Session ID
     """,
     lifespan=lifespan,
     docs_url="/docs",
@@ -82,7 +82,13 @@ app = FastAPI(
 # CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.ALLOWED_ORIGINS,
+    allow_origins=[
+        "https://erabytse.github.io",
+        "http://localhost:3000",
+        "http://localhost:8000",
+        "https://erabytse.github.io/cryptologin-website/",
+        "http://api.docudeeper.com",
+    ] + settings.ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

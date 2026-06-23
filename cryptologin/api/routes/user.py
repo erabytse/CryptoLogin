@@ -43,7 +43,7 @@ async def get_user_data(
     user_id: str = Depends(get_current_user),
     user_manager: UserManager = Depends(get_user_manager)
 ) -> Any:
-    """Récupère les données de l'utilisateur."""
+    """Retrieves the user's data."""
     try:
         data = user_manager.get_user_data(user_id, master_secret)
         
@@ -99,7 +99,7 @@ async def update_user_data(
     user_id: str = Depends(get_current_user),
     user_manager: UserManager = Depends(get_user_manager)
 ) -> Any:
-    """Met à jour les données de l'utilisateur."""
+    """Updates the user's data."""
     try:
         result = user_manager.update_user_data(
             user_id,
@@ -156,7 +156,7 @@ async def rotate_secret(
     user_id: str = Depends(get_current_user),
     user_manager: UserManager = Depends(get_user_manager)
 ) -> Any:
-    """Rotate le secret de l'utilisateur."""
+    """Rotate the user's secret."""
     try:
         result = user_manager.rotate_user_secret(
             user_id,
@@ -211,7 +211,7 @@ async def delete_user(
     user_id: str = Depends(get_current_user),
     user_manager: UserManager = Depends(get_user_manager)
 ) -> Any:
-    """Supprime le compte de l'utilisateur."""
+    """Delete the user's account."""
     try:
         # Vérifier que le secret correspond
         derived_id = user_manager.crypto_engine.derive_user_id(delete_data.master_secret)
@@ -262,7 +262,7 @@ async def get_user_info(
     user_id: str = Depends(get_current_user),
     user_manager: UserManager = Depends(get_user_manager)
 ) -> Any:
-    """Récupère les informations de l'utilisateur."""
+    """Retrieves the user's information."""
     try:
         record = user_manager.storage.get_user(user_id)
         if not record:

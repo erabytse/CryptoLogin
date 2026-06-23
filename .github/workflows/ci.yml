@@ -28,6 +28,10 @@ jobs:
           pip install pytest-cov
 
       - name: Run tests
+        env:
+          CRYPTOLOGIN_SECRET_KEY: "test-secret-key-for-ci-32-characters-long"
+          DEBUG: "True"
+          DATABASE_URL: "sqlite:///test.db"
         run: |
           pytest tests/ -v --cov=cryptologin --cov-report=xml
 

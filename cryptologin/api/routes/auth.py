@@ -42,7 +42,7 @@ async def register(
     user_data: RegisterRequest,
     user_manager: UserManager = Depends(get_user_manager)
 ) -> Any:
-    """Enregistre un nouvel utilisateur."""
+    """Register a new user."""
     try:
         user_id = user_manager.register_user(
             user_data.master_secret,
@@ -87,7 +87,7 @@ async def login_init(
     login_data: LoginInitRequest,
     user_manager: UserManager = Depends(get_user_manager)
 ) -> Any:
-    """Initie le processus de login."""
+    """Initiate the login process."""
     try:
         challenge = user_manager.initiate_login(login_data.master_secret)
         
@@ -134,7 +134,7 @@ async def login_verify(
     verify_data: LoginVerifyRequest,
     user_manager: UserManager = Depends(get_user_manager)
 ) -> Any:
-    """Vérifie la réponse au challenge et crée une session."""
+    """Verify the challenge response and create a session."""
     try:
         session = user_manager.complete_login(
             verify_data.master_secret,
@@ -184,7 +184,7 @@ async def logout(
     user_id: str = Depends(get_current_user),
     user_manager: UserManager = Depends(get_user_manager)
 ) -> Any:
-    """Déconnecte l'utilisateur."""
+    """Log out the user."""
     try:
         user_manager.logout(user_id)
         return MessageResponse(
