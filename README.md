@@ -9,7 +9,7 @@
 [![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-green.svg)](LICENSE)
 [![PyPI](https://img.shields.io/pypi/v/cryptologin.svg)](https://pypi.org/project/cryptologin/)
-[![Tests](https://github.com/erabytse/CryptoLogin/actions/workflows/ci.yml/badge.svg)](https://github.com/erabytse/CryptoLogin/actions)
+[![CI Status](https://img.shields.io/badge/CI-Pending-yellow.svg)](https://github.com/erabytse/CryptoLogin)
 [![Security](https://img.shields.io/badge/Security-Military%20Grade-red.svg)](SECURITY.md)
 [![Stars](https://img.shields.io/github/stars/erabytse/CryptoLogin.svg)](https://github.com/yourusername/cryptologin)
 
@@ -156,6 +156,18 @@ Security Certifications
 - 🏥 Healthcare - GDPR compliant authentication
 
 - 💳 Fintech - High-security authentication
+
+#
+
+# 🧪 DEMO
+
+Try it now
+
+The interactive demo
+
+Create an account in 2 seconds. One master secret. No personal data.
+
+<b>[ONLINE DEMO](https://erabytse.github.io/cryptologin-website/)</b>
 
 #
 
