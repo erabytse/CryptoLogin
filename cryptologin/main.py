@@ -116,7 +116,7 @@ app.include_router(health.router, prefix=settings.API_PREFIX)
 
 @app.get("/")
 async def root():
-    """Racine de l'API."""
+    """API root."""
     return {
         "name": "CryptoLogin",
         "version": settings.APP_VERSION,
@@ -127,5 +127,5 @@ async def root():
 
 @app.get("/ping")
 async def ping():
-    """Ping simple pour vérifier que l'API est active."""
+    """Simple ping to check if the API is active."""
     return {"pong": "alive"}
