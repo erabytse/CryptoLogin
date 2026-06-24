@@ -8,7 +8,7 @@ import json
 
 
 class Settings(BaseSettings):
-    """Configuration de l'application"""
+    """Application configuration"""
     
     # Application
     APP_NAME: str = "CryptoLogin"
@@ -24,7 +24,7 @@ class Settings(BaseSettings):
     SECRET_KEY: str = Field(
         default="dev-secret-key-change-in-production-1234567890",
         alias="CRYPTOLOGIN_SECRET_KEY",
-        description="Clé secrète pour JWT"
+        description="Secret key for JWT"
     )
     JWT_ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
@@ -74,7 +74,7 @@ class Settings(BaseSettings):
 
 
 def get_settings() -> Settings:
-    """Retourne l'instance de configuration."""
+    """Returns the configuration instance."""
     return Settings()
 
 

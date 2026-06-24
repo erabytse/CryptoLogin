@@ -52,13 +52,13 @@ app = FastAPI(
     title="CryptoLogin API",
     version=settings.APP_VERSION,
     description="""
-    ## CryptoLogin - Zero-Knowledge Authentication System
+    ## CryptoLogin - Passwordless Authentication without Password Storage System
     
     **CryptoLogin** is a passwordless authentication system
-    based on the concept of "zero-knowledge".
+    based on the concept of "Passwordless Authentication without Password Storage".
     
     ### Key Principles:
-    - **Zero-Knowledge**: The server never knows your secret
+    - **Passwordless Authentication without Password Storage**: The server never knows your secret
     - **Military-Grade Cryptography**: AES-256-GCM + Argon2id
     - **Encrypted Data**: Vault protected by your secret
     - **Secure Sessions**: Configurable lifespan
@@ -66,7 +66,7 @@ app = FastAPI(
     ### Authentication Flow:
     1. `/register` - Registration
     2. `/login/init` - Obtain Challenge
-    3. `/login/verify` - VVerification and Session Creation
+    3. `/login/verify` - Verification and Session Creation
     4. Access Resources with Session ID
     """,
     lifespan=lifespan,

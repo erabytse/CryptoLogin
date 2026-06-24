@@ -1,5 +1,5 @@
 """
-Implémentation de stockage en mémoire (pour les tests)
+In-memory storage implementation (for testing)
 """
 from typing import Optional, Dict, Any, List
 from datetime import datetime
@@ -9,45 +9,45 @@ from .base import StorageInterface, UserRecord
 
 class MemoryStorage(StorageInterface):
     """
-    Stockage en mémoire pour les tests.
+    In-memory storage for testing.
     
-    Attention : Non persistant, à utiliser uniquement en développement.
+    Please note: Non-persistent; for development use only.
     """
     
     def __init__(self):
         self._users: Dict[str, UserRecord] = {}
     
     def save_user(self, record: UserRecord) -> None:
-        """Sauvegarde un utilisateur en mémoire."""
+        """Saves a user to memory."""
         self._users[record.user_id] = record
     
     def get_user(self, user_id: str) -> Optional[UserRecord]:
-        """Récupère un utilisateur par son ID."""
+        """Retrieves a user by their ID."""
         return self._users.get(user_id)
     
     def user_exists(self, user_id: str) -> bool:
-        """Vérifie si un utilisateur existe."""
+        """Check whether a user exists."""
         return user_id in self._users
     
     def delete_user(self, user_id: str) -> bool:
-        """Supprime un utilisateur."""
+        """Delete a user."""
         if user_id in self._users:
             del self._users[user_id]
             return True
         return False
     
     def update_user_activity(self, user_id: str) -> None:
-        """Met à jour la date de dernière activité."""
+        """Updates the last activity date."""
         record = self._users.get(user_id)
         if record:
             record.last_activity_at = datetime.now()
     
     def get_user_count(self) -> int:
-        """Retourne le nombre total d'utilisateurs."""
+        """Returns the total number of users."""
         return len(self._users)
     
     def list_users(self, limit: int = 100, offset: int = 0) -> List[Dict[str, Any]]:
-        """Liste les utilisateurs."""
+        """List of users."""
         users = []
         for i, (user_id, record) in enumerate(self._users.items()):
             if i < offset:

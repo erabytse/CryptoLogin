@@ -11,8 +11,8 @@ from typing import Optional
 def main():
     """Main CLI entry point."""
     parser = argparse.ArgumentParser(
-        description="CryptoLogin - Zero-Knowledge Authentication System",
-        epilog="For more information: https://cryptologin.io"
+        description="CryptoLogin - Passwordless Authentication without Password Storage",
+        epilog="For more information: https://github.com/erabytse/CryptoLogin"
     )
     
     subparsers = parser.add_subparsers(dest="command", help="Command to execute")

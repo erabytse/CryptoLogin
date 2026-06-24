@@ -1,8 +1,8 @@
 """
 CryptoLogin Core Cryptographic Engine
 -------------------------------------
-Module de sécurité fondamental basé sur flash512-vanguard.
-Ce module fournit des fonctions de dérivation d'identifiant utilisateur, de chiffrement/déchiffrement,
+Core security module based on flash512-vanguard.
+This module provides functions for user ID derivation, encryption/decryption,
 """
 import os
 import hashlib

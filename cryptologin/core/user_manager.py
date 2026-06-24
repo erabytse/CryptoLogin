@@ -1,5 +1,5 @@
 """
-CryptoLogin User Manager - Avec Data Vault
+CryptoLogin User Manager - with Data Vault
 """
 import logging
 from typing import Optional, Dict, Any
@@ -193,14 +193,14 @@ class UserManager:
     
     def get_user_data(self, user_id: str, master_secret: str) -> Optional[Dict[str, Any]]:
         """
-        Récupère les données utilisateur depuis le Vault.
+        Retrieves user data from the Vault.
         
         Args:
-            user_id: ID de l'utilisateur
-            master_secret: Secret maître pour déchiffrer
+            user_id: User ID
+            master_secret: Master secret for decryption
             
         Returns:
-            Optional[Dict[str, Any]]: Données déchiffrées
+            Optional[Dict[str, Any]]: Decrypted data
         """
         record = self.storage.get_user(user_id)
         if not record:

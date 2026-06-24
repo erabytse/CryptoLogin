@@ -1,5 +1,5 @@
 """
-Routes utilisateur
+User routes
 """
 from typing import Any
 from fastapi import APIRouter, Depends, HTTPException, logger, status, Query, Request
@@ -39,7 +39,7 @@ router = APIRouter(prefix="/user", tags=["User"])
 @rate_limiter.limit("60/minute")
 async def get_user_data(
     request: Request,
-    master_secret: str = Query(..., min_length=32, description="Secret maître de l'utilisateur"),
+    master_secret: str = Query(..., min_length=32, description="User’s secret master"),
     user_id: str = Depends(get_current_user),
     user_manager: UserManager = Depends(get_user_manager)
 ) -> Any:

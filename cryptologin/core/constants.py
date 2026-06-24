@@ -1,5 +1,5 @@
 """
-Constantes globales du coeur cryptographique
+Global constants of the cryptographic core
 """
 import os
 

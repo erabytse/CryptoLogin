@@ -1,17 +1,17 @@
 """
 CryptoLogin Data Vault
 ----------------------
-Module de chiffrement des données utilisateur.
+User data encryption module.
 
-Le Data Vault assure que toutes les données sensibles des utilisateurs
-sont chiffrées avant d'être stockées. La clé de chiffrement est dérivée
-du master_secret, assurant que seul l'utilisateur peut accéder à ses
-données.
+The Data Vault ensures that all sensitive user data
+is encrypted before being stored. The encryption key is derived
+from the master_secret, ensuring that only the user can access their
+data.
 
-Zero-Knowledge Architecture:
-- Le serveur ne connaît jamais le master_secret
-- Les données sont chiffrées côté serveur avec Flash512
-- La clé est dérivée à la volée et effacée immédiatement
+Passwordless Authentication without Password Storage Architecture:
+- The server never knows the master_secret
+- Data is encrypted on the server side using Flash512
+- The key is derived on the fly and deleted immediately
 """
 import json
 import logging
@@ -32,7 +32,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class VaultRecord:
     """
-    Enregistrement chiffré du Data Vault.
+    Encrypted Data Vault storage.
     """
     encrypted_data: str  # Token Flash512 (AES-256-GCM)
     version: str = "1.0"
@@ -42,17 +42,17 @@ class VaultRecord:
 
 class DataVault:
     """
-    Coffre-fort des données utilisateur.
+    User data vault.
     
-    Responsabilités :
-    - Chiffrer les données utilisateur avec Flash512
-    - Déchiffrer les données utilisateur
-    - Gérer la migration de données lors de la rotation de secret
+    Responsibilities:
+    - Encrypt user data using Flash512
+    - Decrypt user data
+    - Manage data migration during secret rotation
     
-    Sécurité :
-    - AES-256-GCM avec Argon2id via Flash512
-    - SecureBuffer pour l'effacement mémoire
-    - Validation d'intégrité via GCM tag
+    Security:
+    - AES-256-GCM with Argon2id via Flash512
+    - SecureBuffer for memory erasure
+    - Integrity validation via GCM tag
     """
     
     def __init__(self, crypto_engine: Optional[CryptoEngine] = None):
@@ -75,28 +75,28 @@ class DataVault:
         master_secret: str
     ) -> VaultRecord:
         """
-        Chiffre des données avec le secret maître.
+        Encrypt the data using the master secret.
         
         Args:
-            data: Données à chiffrer (dictionnaire ou chaîne)
-            master_secret: Secret maître de l'utilisateur
+            data: Data to be encrypted (dictionary or string)
+            master_secret: The user’s master secret
             
         Returns:
-            VaultRecord: Enregistrement contenant les données chiffrées
+            VaultRecord: A record containing the encrypted data
             
         Raises:
-            InvalidSecretError: Si le secret est invalide
-            DataVaultError: En cas d'erreur
+            InvalidSecretError: If the secret is invalid
+            DataVaultError: In the event of an error
         """
         logger.debug("Encrypting vault data...")
     
-        # 1. Validation du secret
+        # 1. Verification of confidentiality
         try:
             self.crypto_engine._validate_secret(master_secret)
         except InvalidSecretError:
             raise
         
-        # 2. Sérialisation des données
+        # 2. Data serialisation
         try:
             if isinstance(data, dict):
                 plaintext = json.dumps(data, ensure_ascii=False)
@@ -107,7 +107,7 @@ class DataVault:
         except Exception as e:
             raise DataVaultError(f"Data serialization failed: {e}")
         
-        # 3. Chiffrement avec Flash512
+        # 3. Encryption with Flash512
         try:
             encrypted_token = self.crypto_engine.encrypt_data(
                 plaintext,
@@ -133,20 +133,20 @@ class DataVault:
         master_secret: str
     ) -> Dict[str, Any]:
         """
-        Déchiffre des données du Data Vault.
+        Decrypts data from the Data Vault.
         
         Args:
-            record: Enregistrement contenant les données chiffrées
-            master_secret: Secret maître de l'utilisateur
+            record: Record containing the encrypted data
+            master_secret: The user’s master secret
             
         Returns:
-            Dict[str, Any]: Données déchiffrées
+            Dict[str, Any]: Decrypted data
             
         Raises:
-            InvalidSecretError: Si le secret est invalide
-            DecryptionError: Si le déchiffrement échoue
-            IntegrityError: Si l'intégrité du token est compromise
-            DataVaultError: En cas d'erreur
+            InvalidSecretError: If the secret is invalid
+            DecryptionError: If decryption fails
+            IntegrityError: If the token’s integrity is compromised
+            DataVaultError: In the event of an error
         """
         logger.debug("Decrypting vault data...")
         
@@ -156,24 +156,24 @@ class DataVault:
         except InvalidSecretError:
             raise
         
-        # 2. Vérification du record
+        # 2. Record verification
         if not record or not record.encrypted_data:
             raise DataVaultError("Invalid vault record: empty data")
         
-        # 3. Déchiffrement avec Flash512
+        # 3. Decryption using Flash512
         try:
             plaintext = self.crypto_engine.decrypt_data(
                 record.encrypted_data,
                 master_secret
             )
             
-            # 4. Désérialisation
+            # 4. Deserialisation
             try:
                 data = json.loads(plaintext)
                 logger.debug("Vault data decrypted successfully")
                 return data
             except json.JSONDecodeError:
-                # Si ce n'est pas du JSON, retourner comme chaîne
+                # If it is not JSON, return it as a string
                 return {"_raw": plaintext}
                 
         except (CryptoError, DecryptionError, IntegrityError) as e:
@@ -192,34 +192,34 @@ class DataVault:
         new_secret: str
     ) -> VaultRecord:
         """
-        Rotate le secret des données du Data Vault.
+        Rotate the Data Vault data secret.
         
-        Processus :
-        1. Déchiffrer avec l'ancien secret
-        2. Re-chiffrer avec le nouveau secret
+        Process:
+        1. Decrypt using the old secret
+        2. Re-encrypt using the new secret
         
-        Args:
-            record: Enregistrement à migrer
-            old_secret: Ancien secret
-            new_secret: Nouveau secret
+        Arguments:
+            record: Record to be migrated
+            old_secret: Old secret
+            new_secret: New secret
             
         Returns:
-            VaultRecord: Nouvel enregistrement avec le nouveau secret
+            VaultRecord: New record with the new secret
             
         Raises:
-            InvalidSecretError: Si un secret est invalide
-            DataVaultError: En cas d'erreur
+            InvalidSecretError: If a secret is invalid
+            DataVaultError: In the event of an error
         """
         logger.debug("Rotating vault data...")
         
         try:
-            # 1. Déchiffrer avec l'ancien secret
+            # 1. Deciphering with the ancient secret
             plaintext = self.crypto_engine.decrypt_data(
                 record.encrypted_data,
                 old_secret
             )
             
-            # 2. Re-chiffrer avec le nouveau secret
+            # 2. Re-encrypt using the new secret
             new_encrypted = self.crypto_engine.encrypt_data(
                 plaintext,
                 new_secret
@@ -250,17 +250,17 @@ class DataVault:
         master_secret: str
     ) -> bool:
         """
-        Vérifie l'intégrité des données du Vault.
+        Checks the integrity of the Vault data.
         
         Args:
-            record: Enregistrement à vérifier
-            master_secret: Secret maître
+            record: Record to check
+            master_secret: Master secret
             
         Returns:
-            bool: True si l'intégrité est valide ET le secret est correct
+            bool: True if the integrity check passes AND the secret is correct
         """
         try:
-            # Tenter de déchiffrer pour vérifier à la fois l'intégrité ET le secret
+            # Attempt to decrypt in order to verify both integrity AND confidentiality
             self.decrypt_data(record, master_secret)
             return True
         except Exception:
@@ -268,29 +268,29 @@ class DataVault:
     
     def is_vault_empty(self, record: Optional[VaultRecord]) -> bool:
         """
-        Vérifie si le Vault est vide.
+        Checks whether the Vault is empty.
         
         Args:
-            record: Enregistrement à vérifier
+            record: Record to check
             
         Returns:
-            bool: True si le Vault est vide
+            bool: True if the Vault is empty
         """
         return record is None or not record.encrypted_data
     
     def create_empty_vault(self) -> VaultRecord:
         """
-        Crée un Vault vide (pour les nouveaux utilisateurs).
+        Creates an empty Vault (for new users).
         
         Returns:
-            VaultRecord: Enregistrement avec des données vides chiffrées
+            VaultRecord: Record with encrypted empty data
         """
-        # Note: Ceci est juste un placeholder. Le Vault est créé avec
-        # un dictionnaire vide chiffré avec un secret temporaire.
-        # Dans la pratique, le Vault est créé lors de l'enregistrement.
+        # Note: This is just a placeholder. The Vault is created with
+        # an empty dictionary encrypted with a temporary secret.
+        # In practice, the Vault is created upon registration.
         empty_data = json.dumps({})
-        # Utiliser un secret temporaire pour le chiffrement
-        # Ceci sera remplacé lors du premier stockage réel
+        # Use a temporary secret for encryption
+        # This will be replaced when the data is first actually stored
         temp_secret = "temporary_secret_do_not_use_in_production"
         try:
             encrypted = self.crypto_engine.encrypt_data(empty_data, temp_secret)
@@ -301,13 +301,13 @@ class DataVault:
     
     def serialize_record(self, record: VaultRecord) -> Dict[str, Any]:
         """
-        Sérialise un VaultRecord en dictionnaire pour stockage.
+        Serialises a VaultRecord into a dictionary for storage.
         
         Args:
-            record: Enregistrement à sérialiser
+            record: Record to be serialised
             
         Returns:
-            Dict[str, Any]: Dictionnaire prêt pour le stockage
+            Dict[str, Any]: Dictionary ready for storage
         """
         return {
             "encrypted_data": record.encrypted_data,
@@ -319,13 +319,13 @@ class DataVault:
     @classmethod
     def deserialize_record(cls, data: Dict[str, Any]) -> VaultRecord:
         """
-        Désérialise un dictionnaire en VaultRecord.
+        Deserialises a dictionary into a VaultRecord.
         
         Args:
-            data: Dictionnaire à désérialiser
+            data: Dictionary to be deserialised
             
         Returns:
-            VaultRecord: Enregistrement reconstitué
+            VaultRecord: Reconstructed record
         """
         return VaultRecord(
             encrypted_data=data.get("encrypted_data", ""),
@@ -340,5 +340,5 @@ class DataVault:
 # ============================================================
 
 class DataVaultError(CryptoError):
-    """Erreur du Data Vault"""
+    """Data Vault error"""
     pass

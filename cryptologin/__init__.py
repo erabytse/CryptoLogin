@@ -1,9 +1,9 @@
 """
-CryptoLogin - Zero-Knowledge Authentication System
+CryptoLogin -  Passwordless Authentication without Password Storage
 """
 
 __version__ = "1.0.0"
-__author__ = "CryptoLogin Team"
+__author__ = "CryptoLogin Team by erabytse"
 __license__ = "Apache-2.0"
 
 from .core.crypto_engine import CryptoEngine

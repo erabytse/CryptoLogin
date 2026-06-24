@@ -1,19 +1,19 @@
 """
 CryptoLogin SQLite Storage
 --------------------------
-Implémentation de StorageInterface avec SQLite.
+Implementation of StorageInterface using SQLite.
 
-Caractéristiques :
-- Migration automatique des schémas
-- Connexion thread-safe
-- Transactions ACID
-- Sauvegarde automatique (WAL mode)
-- Index pour performance
+Features:
+- Automatic schema migration
+- Thread-safe connection
+- ACID transactions
+- Automatic backup (WAL mode)
+- Indexes for performance
 
-Sécurité :
-- Fichier de base de données avec permissions restrictives
-- Journalisation WAL pour la récupération en cas de crash
-- Paramètres de requête paramétrés (protection SQL injection)
+Security:
+- Database file with restrictive permissions
+- WAL logging for crash recovery
+- Parameterised queries (SQL injection protection)
 """
 import json
 import sqlite3
@@ -31,12 +31,12 @@ logger = logging.getLogger(__name__)
 
 class SQLiteStorage(StorageInterface):
     """
-    Implémentation de StorageInterface avec SQLite.
+    Implementation of StorageInterface using SQLite.
     
-    Utilise SQLite pour la persistance des données avec :
-    - Migration automatique à la première connexion
-    - WAL mode pour la performance et la récupération
-    - Transactions pour l'intégrité des données
+    Uses SQLite for data persistence with:
+    - Automatic migration on first connection
+    - WAL mode for performance and recovery
+    - Transactions for data integrity
     """
     
     # Schéma de la base de données
@@ -106,11 +106,11 @@ class SQLiteStorage(StorageInterface):
     
     def __init__(self, db_path: str = "cryptologin.db", auto_migrate: bool = True):
         """
-        Initialise le stockage SQLite.
+        Initialises the SQLite database.
         
         Args:
-            db_path: Chemin vers le fichier de base de données
-            auto_migrate: Migrer automatiquement le schéma si nécessaire
+            db_path: Path to the database file
+            auto_migrate: Automatically migrate the schema if necessary
         """
         self.db_path = db_path
         self._ensure_directory_exists()
@@ -121,7 +121,7 @@ class SQLiteStorage(StorageInterface):
         logger.info("SQLiteStorage initialized with database: %s", db_path)
     
     def _ensure_directory_exists(self) -> None:
-        """Crée le répertoire de la base de données s'il n'existe pas."""
+        """Creates the database directory if it does not exist."""
         db_dir = os.path.dirname(self.db_path)
         if db_dir and not os.path.exists(db_dir):
             os.makedirs(db_dir, exist_ok=True)
@@ -130,12 +130,12 @@ class SQLiteStorage(StorageInterface):
     @contextmanager
     def _get_connection(self):
         """
-        Context manager pour les connexions SQLite.
+        Context manager for SQLite connections.
         
-        Configure la connexion avec :
-        - row_factory pour accès par nom de colonne
-        - WAL mode pour la performance
-        - Foreign keys activées
+        Configures the connection with:
+        - row_factory for access by column name
+        - WAL mode for performance
+        - Foreign keys enabled
         """
         conn = sqlite3.connect(
             self.db_path,
@@ -156,12 +156,12 @@ class SQLiteStorage(StorageInterface):
     
     def migrate(self) -> None:
         """
-        Migre la base de données au schéma actuel.
-        Cette méthode :
-        1. Vérifie si la table existe
-        2. Crée la table si nécessaire
-        3. Crée les indexes
-        Chaque requête est exécutée séparément.
+        Migrates the database to the current schema.
+        This method:
+        1. Checks whether the table exists
+        2. Creates the table if necessary
+        3. Creates the indexes
+        Each query is executed separately.
         """
         logger.info("Running database migration...")
         
@@ -257,7 +257,7 @@ class SQLiteStorage(StorageInterface):
         
     def user_exists(self, user_id: str) -> bool:
         """
-        Vérifie si un utilisateur existe.
+        Check whether a user exists.
         """
         try:
             with self._get_connection() as conn:
@@ -271,7 +271,7 @@ class SQLiteStorage(StorageInterface):
     
     def delete_user(self, user_id: str) -> bool:
         """
-        Supprime un utilisateur.
+        Delete a user.
         """
         logger.debug("Deleting user: %s...", user_id[:16])
         
@@ -294,8 +294,8 @@ class SQLiteStorage(StorageInterface):
     
     def update_user_activity(self, user_id: str) -> None:
         """
-        Met à jour l'activité d'un utilisateur.
-        Met à jour la date de dernière activité.
+        Updates a user’s activity.
+        Updates the last activity date.
         """
         try:
             with self._get_connection() as conn:
@@ -311,8 +311,8 @@ class SQLiteStorage(StorageInterface):
     
     def get_user_count(self) -> int:
         """
-        Retourne le nombre total d'utilisateurs.
-        Récupère le nombre total d'utilisateurs.
+        Returns the total number of users.
+        Retrieves the total number of users.
         """
         try:
             with self._get_connection() as conn:
@@ -327,7 +327,7 @@ class SQLiteStorage(StorageInterface):
    
     def list_users(self, limit: int = 100, offset: int = 0) -> List[Dict[str, Any]]:
         """
-        Liste les utilisateurs pour l'administration.
+        Lists the users for administration purposes.
         """
         try:
             with self._get_connection() as conn:
@@ -358,13 +358,13 @@ class SQLiteStorage(StorageInterface):
     
     def backup(self, backup_path: str) -> bool:
         """
-        Sauvegarde la base de données.
+        Backs up the database.
         
         Args:
-            backup_path: Chemin où sauvegarder
+            backup_path: Path to save to
             
         Returns:
-            bool: True si la sauvegarde a réussi
+            bool: True if the backup was successful
         """
         try:
             if not os.path.exists(self.db_path):
@@ -388,10 +388,10 @@ class SQLiteStorage(StorageInterface):
     
     def vacuum(self) -> bool:
         """
-        Compacte la base de données pour libérer de l'espace.
+        Compact the database to free up space.
         
         Returns:
-            bool: True si le compactage a réussi
+            bool: True if the compaction was successful
         """
         try:
             with self._get_connection() as conn:
@@ -405,10 +405,10 @@ class SQLiteStorage(StorageInterface):
     
     def get_database_size(self) -> int:
         """
-        Retourne la taille de la base de données en octets.
+        Returns the size of the database in bytes.
         
         Returns:
-            int: Taille en octets (0 si le fichier n'existe pas)
+            int: Size in bytes (0 if the file does not exist)
         """
         if os.path.exists(self.db_path):
             return os.path.getsize(self.db_path)
@@ -416,12 +416,12 @@ class SQLiteStorage(StorageInterface):
     
     def delete_database(self) -> bool:
         """
-        Supprime le fichier de base de données.
+        Deletes the database file.
         
-        ATTENTION: Cette opération est irréversible.
+        WARNING: This operation cannot be undone.
         
         Returns:
-            bool: True si la suppression a réussi
+            bool: True if the deletion was successful
         """
         try:
             if os.path.exists(self.db_path):

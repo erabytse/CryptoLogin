@@ -1,5 +1,5 @@
 """
-Interfaces de stockage abstraites
+Abstract storage interfaces
 """
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
@@ -10,7 +10,7 @@ from datetime import datetime
 @dataclass
 class UserRecord:
     """
-    Enregistrement d'un utilisateur en base de données.
+    Registering a user in the database.
     """
     user_id: str
     challenge_token: str  # Challenge chiffré
@@ -23,91 +23,91 @@ class UserRecord:
 
 class StorageInterface(ABC):
     """
-    Interface de stockage pour CryptoLogin.
+    Storage interface for CryptoLogin.
     
-    Toute implémentation de stockage (SQLite, PostgreSQL, Memory, etc.)
-    doit implémenter cette interface.
+    Any storage implementation (SQLite, PostgreSQL, Memory, etc.)
+    must implement this interface.
     """
     
     @abstractmethod
     def save_user(self, record: UserRecord) -> None:
         """
-        Sauvegarde ou met à jour un utilisateur.
+        Saves or updates a user.
         
         Args:
-            record: L'enregistrement à sauvegarder
+            record: The record to be saved
         """
         pass
     
     @abstractmethod
     def get_user(self, user_id: str) -> Optional[UserRecord]:
         """
-        Récupère un utilisateur par son ID.
+        Retrieves a user by their ID.
         
         Args:
-            user_id: L'ID de l'utilisateur
+            user_id: The user’s ID
             
         Returns:
-            Optional[UserRecord]: L'utilisateur ou None
+            Optional[UserRecord]: The user or None
         """
         pass
     
     @abstractmethod
     def user_exists(self, user_id: str) -> bool:
         """
-        Vérifie si un utilisateur existe.
+        Checks whether a user exists.
         
         Args:
-            user_id: L'ID de l'utilisateur
+            user_id: The user’s ID
             
         Returns:
-            bool: True si l'utilisateur existe
+            bool: True if the user exists
         """
         pass
     
     @abstractmethod
     def delete_user(self, user_id: str) -> bool:
         """
-        Supprime un utilisateur.
+        Deletes a user.
         
         Args:
-            user_id: L'ID de l'utilisateur
+            user_id: The user’s ID
             
         Returns:
-            bool: True si la suppression a réussi
+            bool: True if the deletion was successful
         """
         pass
     
     @abstractmethod
     def update_user_activity(self, user_id: str) -> None:
         """
-        Met à jour la date de dernière activité.
+        Updates the last activity date.
         
         Args:
-            user_id: L'ID de l'utilisateur
+            user_id: The user’s ID
         """
         pass
     
     @abstractmethod
     def get_user_count(self) -> int:
         """
-        Retourne le nombre total d'utilisateurs.
+        Returns the total number of users.
         
         Returns:
-            int: Nombre d'utilisateurs
+            int: Number of users
         """
         pass
     
     @abstractmethod
     def list_users(self, limit: int = 100, offset: int = 0) -> List[Dict[str, Any]]:
         """
-        Liste les utilisateurs pour l'administration.
+        Lists the users for administration purposes.
         
         Args:
-            limit: Nombre maximum d'utilisateurs
-            offset: Décalage
+            limit: Maximum number of users
+            offset: Offset
             
         Returns:
-            List[Dict[str, Any]]: Liste des utilisateurs
+            List[Dict[str, Any]]: List of users
         """
         pass
