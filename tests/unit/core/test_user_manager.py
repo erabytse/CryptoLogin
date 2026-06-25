@@ -3,6 +3,7 @@ Tests unitaires pour le UserManager - Version finale avec Data Vault
 """
 import pytest
 from cryptologin.core.user_manager import UserManager
+from cryptologin.core.user_manager_v2 import UserManagerV2
 from cryptologin.core.crypto_engine import CryptoEngine
 from cryptologin.core.exceptions import (
     UserNotFoundError,

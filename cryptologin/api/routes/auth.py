@@ -6,6 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException, status, Request
 from fastapi.responses import JSONResponse
 
 from ...core.user_manager import UserManager
+from ...core.user_manager_v2 import UserManagerV2
 from ...core.exceptions import (
     UserNotFoundError,
     UserAlreadyExistsError,

@@ -1,5 +1,5 @@
 """
-In-memory storage implementation (for testing)
+In-memory storage implementation – V2 with zero-knowledge fields
 """
 from typing import Optional, Dict, Any, List
 from datetime import datetime
@@ -9,7 +9,7 @@ from .base import StorageInterface, UserRecord
 
 class MemoryStorage(StorageInterface):
     """
-    In-memory storage for testing.
+    In-memory storage for testing – V2.
     
     Please note: Non-persistent; for development use only.
     """
@@ -26,7 +26,7 @@ class MemoryStorage(StorageInterface):
         return self._users.get(user_id)
     
     def user_exists(self, user_id: str) -> bool:
-        """Check whether a user exists."""
+        """Checks whether a user exists."""
         return user_id in self._users
     
     def delete_user(self, user_id: str) -> bool:
@@ -59,6 +59,7 @@ class MemoryStorage(StorageInterface):
                 'created_at': record.created_at,
                 'updated_at': record.updated_at,
                 'last_activity_at': record.last_activity_at,
-                'has_vault': record.vault_data is not None
+                'has_vault': record.vault_data is not None,
+                'has_salt': record.salt is not None,
             })
         return users

@@ -2,7 +2,7 @@
 
 # ![Passwordless Authentication without Password Storage](https://raw.githubusercontent.com/erabytse/CryptoLogin/main/images/logo.png)
 
-## _Passwordless Authentication without Password Storage_
+## _Zero-Knowledge-Inspired Passwordless Authentication without Password Storage_
 
 **The Future of Authentication is Here. No Email. No Password. Just Your Secret.**
 
@@ -19,7 +19,22 @@
 
 <img src="https://raw.githubusercontent.com/erabytse/CryptoLogin/main/images/CryptoLogin.gif" width="320" height="170" alt="CryptoLogin"/>
 
+CryptoLogin uses a challenge-response mechanism inspired by Zero-Knowledge principles.
+The server never stores your secret. Your secret never leaves your device.
+
 </div>
+
+---
+
+## 🛡️ Powered by Flash512-Vanguard
+
+CryptoLogin is built on top of [Flash512-Vanguard](https://github.com/erabytse/Flash512-vanguard), a military-grade encryption engine:
+
+- **AES-256-GCM** - NIST standard encryption
+- **Argon2id** - Memory-hard key derivation (GPU/ASIC resistant)
+- **SecureBuffer** - Automatic memory wiping of sensitive data
+
+Flash512 handles all cryptographic operations, ensuring that CryptoLogin inherits battle-tested security from one of the most robust encryption libraries available.
 
 ---
 
@@ -197,6 +212,22 @@ No asymmetric keys, no WebAuthn complexity, no email verification. Just Flash512
 ✅ Breach-Resistant
 
 If the database is compromised, attackers only get encrypted challenges. They must brute-force each user individually.
+
+# Powered by Flash512-Vanguard
+
+Flash512-Vanguard is the cryptographic engine behind CryptoLogin. It provides:
+
+- AES-256-GCM: NIST-standard authenticated encryption
+
+- Argon2id: Memory-hard key derivation
+
+- SecureBuffer: Automatic memory wiping
+
+- Polymorphic encryption: Same data, different ciphertext each time
+
+- Integrity verification: GCM authentication tags
+
+By building on Flash512, CryptoLogin inherits enterprise-grade security without implementing cryptographic primitives from scratch.
 
 ### Deployment Example (Web Application)
 

@@ -7,6 +7,7 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.responses import JSONResponse
 
 from ..core.user_manager import UserManager
+from ..core.user_manager_v2 import UserManagerV2
 from ..storage.sqlite import SQLiteStorage
 from ..config import get_settings, Settings
 from slowapi import Limiter

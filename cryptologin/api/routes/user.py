@@ -5,6 +5,7 @@ from typing import Any
 from fastapi import APIRouter, Depends, HTTPException, logger, status, Query, Request
 
 from ...core.user_manager import UserManager
+from ...core.user_manager_v2 import UserManagerV2
 from ...core.exceptions import (
     UserNotFoundError,
     AuthenticationError,

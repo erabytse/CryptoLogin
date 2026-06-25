@@ -7,7 +7,8 @@ __author__ = "CryptoLogin Team by erabytse"
 __license__ = "Apache-2.0"
 
 from .core.crypto_engine import CryptoEngine
-from .core.user_manager import UserManager
+from .core.user_manager import UserManager 
+from .core.user_manager_v2 import UserManagerV2
 from .core.data_vault import DataVault
 from .core.exceptions import (
     CryptoLoginError,
@@ -37,7 +38,7 @@ class CryptoLogin:
     """
     
     def __init__(self, db_path: str = "cryptologin.db"):
-        from .core.user_manager import UserManager
+        from .core.user_manager_v2 import UserManager
         from .storage.sqlite import SQLiteStorage
         from .core.crypto_engine import CryptoEngine
         
