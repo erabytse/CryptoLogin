@@ -2,7 +2,7 @@
 
 # ![Passwordless Authentication without Password Storage](https://raw.githubusercontent.com/erabytse/CryptoLogin/main/images/logo.png)
 
-## _Zero-Knowledge-Inspired Passwordless Authentication without Password Storage_
+## _Zero-Knowledge-Inspired · Passwordless Authentication · Military-Grade Encryption_
 
 **The Future of Authentication is Here. No Email. No Password. Just Your Secret.**
 
@@ -26,21 +26,9 @@ The server never stores your secret. Your secret never leaves your device.
 
 ---
 
-## 🛡️ Powered by Flash512-Vanguard
-
-CryptoLogin is built on top of [Flash512-Vanguard](https://github.com/erabytse/Flash512-vanguard), a military-grade encryption engine:
-
-- **AES-256-GCM** - NIST standard encryption
-- **Argon2id** - Memory-hard key derivation (GPU/ASIC resistant)
-- **SecureBuffer** - Automatic memory wiping of sensitive data
-
-Flash512 handles all cryptographic operations, ensuring that CryptoLogin inherits battle-tested security from one of the most robust encryption libraries available.
-
----
-
 ## 🚀 What is CryptoLogin?
 
-**CryptoLogin** is a revolutionary **Passwordless Authentication without Password Storage** that eliminates the need for emails, passwords, or social logins.
+**CryptoLogin** is a revolutionary **Passwordless Authentication without Password Storage** with a **Zero-Knowledge-Inspired architecture** that eliminates the need for emails, passwords, or social logins.
 
 ---
 
@@ -72,7 +60,21 @@ To crack it, they must perform offline brute-force:
 3. Decrypt the `challenge_token` with AES-GCM.
 4. Compare with `challenge_en_clair`.
 
-**This is equivalent to cracking a password hash with a salt (like bcrypt/Argon2), but using our own elegant and secure mechanism.**
+**This is equivalent to cracking a password hash with a salt (like bcrypt/Argon2), but using our own elegant and secure mechanism powered by Flash512.**
+
+---
+
+## 🛡️ Powered by Flash512-Vanguard
+
+CryptoLogin is built on top of [Flash512-Vanguard](https://github.com/erabytse/Flash512-vanguard), a military-grade encryption engine:
+
+- **AES-256-GCM** - NIST standard encryption
+- **Argon2id** - Memory-hard key derivation (GPU/ASIC resistant)
+- **SecureBuffer** - Automatic memory wiping of sensitive data
+
+Flash512 handles all cryptographic operations, ensuring that CryptoLogin inherits battle-tested security from one of the most robust encryption libraries available.
+
+---
 
 ### 🚀 Why it's still revolutionary
 
@@ -102,17 +104,17 @@ To crack it, they must perform offline brute-force:
 
 ## ✨ Key Features
 
-| Feature                                                                | Description                    | Security          |
-| :--------------------------------------------------------------------- | :----------------------------- | :---------------- |
-| **CryptoLogin: Passwordless Authentication without Password Storage"** | Server never knows your secret | 🔒 **Military**   |
-| **No Email Required**                                                  | Register without email         | 🔒 **Privacy**    |
-| **No Password Required**                                               | Single master secret           | 🔒 **Simple**     |
-| **AES-256-GCM**                                                        | NIST standard encryption       | 🔒 **FIPS**       |
-| **Argon2id**                                                           | Memory-hard KDF                | 🔒 **OWASP**      |
-| **SecureBuffer**                                                       | Automatic memory wiping        | 🔒 **Military**   |
-| **Data Vault**                                                         | Encrypted user data            | 🔒 **Zero-Trust** |
-| **REST API**                                                           | FastAPI + OpenAPI              | 🔒 **Modern**     |
-| **Rate Limiting**                                                      | Brute-force protection         | 🔒 **Production** |
+| Feature                         | Description                    | Security          |
+| :------------------------------ | :----------------------------- | :---------------- |
+| **Passwordless Authentication** | Server never knows your secret | 🔒 **Military**   |
+| **No Email Required**           | Register without email         | 🔒 **Privacy**    |
+| **No Password Required**        | Single master secret           | 🔒 **Simple**     |
+| **AES-256-GCM**                 | NIST standard encryption       | 🔒 **FIPS**       |
+| **Argon2id**                    | Memory-hard KDF                | 🔒 **OWASP**      |
+| **SecureBuffer**                | Automatic memory wiping        | 🔒 **Military**   |
+| **Data Vault**                  | Encrypted user data            | 🔒 **Zero-Trust** |
+| **REST API**                    | FastAPI + OpenAPI              | 🔒 **Modern**     |
+| **Rate Limiting**               | Brute-force protection         | 🔒 **Production** |
 
 ---
 
@@ -130,13 +132,13 @@ pip install -e .
 
 ## 🔒 Security Model
 
-**CryptoLogin** uses a challenge-response mechanism with symmetric encryption (Flash512) to achieve Passwordless without password storage authentication.
+**CryptoLogin** uses a challenge-response mechanism with symmetric encryption (Flash512).
 
 **Registration:**
 
 1. User creates a `master_secret` (never leaves the client).
-2. Client derives a `user_id` from the `master_secret`.
-3. Server generates a random `challenge` and encrypts it using Flash512 with the `master_secret`.
+2. Client derives a `user_id` from the `master_secret` using Web Crypto API (PBKDF2-SHA512, 100k iterations).
+3. Server generates a random `challenge` and encrypts it using Flash512 with the `user_id`.
 4. Server stores the encrypted challenge (`challenge_token`) in the database.
 
 **Login:**
@@ -166,9 +168,9 @@ sequenceDiagram
 
     Note over User,Server: REGISTRATION
     User->>Browser: Enter master_secret
-    Browser->>Server: POST /register {user_id, master_secret}
+    Browser->>Server: POST /register {user_id}
     Server->>Server: Generate random challenge
-    Server->>Server: Encrypt challenge with master_secret (Flash512)
+    Server->>Server: Encrypt challenge with user_id (Flash512)
     Server->>Server: Store (user_id, challenge, encrypted_token)
     Server->>Browser: Return success
 
@@ -191,7 +193,7 @@ sequenceDiagram
 │ [USER] → [API] → [UserManager] → [Data Vault] → [Storage]       │
 │                                                                 │
 │ 🔐 AES-256-GCM + Argon2id + SecureBuffer                       |
-│ 🚫 Passwordless Authentication Architecture                                 |
+│ 🚫 Passwordless Authentication Architecture                    |
 │ ⚡ FastAPI + SQLite/PostgreSQL                                 |
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
@@ -229,182 +231,505 @@ Flash512-Vanguard is the cryptographic engine behind CryptoLogin. It provides:
 
 By building on Flash512, CryptoLogin inherits enterprise-grade security without implementing cryptographic primitives from scratch.
 
-### Deployment Example (Web Application)
+## 🚀 Quick Start (V2 - Zero-Knowledge)
 
-## Example 1
+### Deployment Example (Web Application)
 
 **Frontend (JavaScript):**
 
 ```javascript
-import { deriveUserId, decrypt } from "cryptologin-wasm";
+import { deriveUserId } from "cryptologin-client";
 
 async function login(masterSecret) {
-  const userId = deriveUserId(masterSecret);
+  // 1. Derive user_id (CLIENT-SIDE)
+  const userId = await deriveUserId(masterSecret);
 
-  const initResponse = await fetch("/auth/login/init", {
+  // 2. Get encrypted challenge from server
+  const initResponse = await fetch("/auth/login/init_v2", {
     method: "POST",
     body: JSON.stringify({ user_id: userId }),
   });
-  const { challenge_token } = await initResponse.json();
+  const { challenge } = await initResponse.json();
 
-  const challenge = decrypt(challenge_token, masterSecret);
-
-  const verifyResponse = await fetch("/auth/login/verify", {
+  // 3. Send the encrypted challenge back (DO NOT DECRYPT)
+  const verifyResponse = await fetch("/auth/login/verify_v2", {
     method: "POST",
-    body: JSON.stringify({ user_id: userId, challenge }),
+    body: JSON.stringify({
+      user_id: userId,
+      challenge_response: challenge,
+    }),
   });
 
   return verifyResponse.json();
 }
 ```
 
-**Backend (Python - FastAPI):**
+**Backend 🚀 EXAMPLE 1: FastAPI (Recommended)**
 
-```python
-@router.post('/auth/login/init')
-async def login_init(user_id: str):
-    challenge = os.urandom(32).hex()
-    challenge_token = Flash512Vanguard.protect(challenge, get_master_secret(user_id))
-    store_challenge(user_id, challenge_token)
-    return {"challenge_token": challenge_token}
+### Structure du projet
 
-@router.post('/auth/login/verify')
-async def login_verify(user_id: str, challenge: str):
-    stored_challenge = get_stored_challenge(user_id)
-    if challenge == stored_challenge:
-        return {"authenticated": True}
-    return {"authenticated": False}
+```text
+myapp/
+├── app.py                 # Application FastAPI
+├── cryptologin.db         # SQLite database (created automatically)
+├── .env                   # Environment variables
+└── requirements.txt
 ```
 
-## Example 2
+### requirements.txt
 
-**Frontend(index.html):**
-
-```html
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>CryptoLogin Demo</title>
-  </head>
-  <body>
-    <h1>CryptoLogin Demo</h1>
-
-    <input type="text" id="userId" placeholder="User ID" />
-    <input type="password" id="masterSecret" placeholder="Master Secret" />
-
-    <button onclick="register()">Register</button>
-    <button onclick="login()">Login</button>
-
-    <script>
-      async function register() {
-        const userId = document.getElementById("userId").value;
-        const masterSecret = document.getElementById("masterSecret").value;
-
-        const res = await fetch("/api/register", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            user_id: userId,
-            master_secret: masterSecret,
-          }),
-        });
-
-        alert(await res.json());
-      }
-
-      async function login() {
-        const userId = document.getElementById("userId").value;
-        const masterSecret = document.getElementById("masterSecret").value;
-
-        // 1. Request the encrypted token
-        const initRes = await fetch("/api/login/init", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ user_id: userId }),
-        });
-        const { challenge_token } = await initRes.json();
-
-        // 2. Decrypt LOCALLY using master_secret
-        // (In the actual app, this is done using WASM/JS with Flash512)
-        const decryptedChallenge = await decryptLocally(
-          challenge_token,
-          masterSecret,
-        );
-
-        // 3. Send back the decrypted challenge
-        const verifyRes = await fetch("/api/login/verify", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            user_id: userId,
-            decrypted_challenge: decryptedChallenge,
-          }),
-        });
-
-        if (verifyRes.ok) {
-          alert("Authentifié !");
-        }
-      }
-
-      async function decryptLocally(token, secret) {
-        // Here, you call Flash512 via WASM/JS
-        // For the demo, we’re simulating
-        return "decrypted_challenge";
-      }
-    </script>
-  </body>
-</html>
+```text
+fastapi==0.104.0
+uvicorn[standard]==0.24.0
+cryptologin>=2.1.0
+python-dotenv==1.0.0
 ```
 
-**Backend(app.py):**
+### .env
+
+```env
+CRYPTOLOGIN_SECRET_KEY=your-super-secret-key-change-in-production-32-chars-min
+FLASH512_VANGUARD_CORE=your-flash512-core-secret-64-chars-min
+DATABASE_URL=sqlite:///cryptologin.db
+```
+
+### app.py
 
 ```python
-from flask import Flask, request, jsonify, session
+"""
+CryptoLogin – Example of integration with FastAPI
+"""
+
+import os
+import logging
+from datetime import datetime
+from typing import Optional
+from contextlib import asynccontextmanager
+
+from fastapi import FastAPI, HTTPException, status, Depends
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, Field
+from dotenv import load_dotenv
+
+# Import CryptoLogin
 from cryptologin import CryptoLogin
-from flash512_vanguard import Flash512Vanguard
+from cryptologin.core.user_manager_v2 import UserManagerV2
+from cryptologin.storage.sqlite_v2 import SQLiteStorageV2
+from cryptologin.client.crypto_client import CryptoClient
+
+# Load environment variables
+load_dotenv()
+
+# Logging configuration
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
+logger = logging.getLogger(__name__)
+
+
+# ============================================================
+# PYDANTIC MODELS
+# ============================================================
+
+class RegisterRequest(BaseModel):
+    """Application for registration V2."""
+    user_id: str = Field(..., description="User ID derived from the master_secret (64 hex characters)")
+    user_data: Optional[dict] = Field(default=None, description="User data")
+
+
+class LoginInitRequest(BaseModel):
+    """Request to initiate login."""
+    user_id: str = Field(..., description="User ID")
+
+
+class LoginVerifyRequest(BaseModel):
+    """Request for login verification."""
+    user_id: str = Field(..., description="User ID")
+    challenge_response: str = Field(..., description="Numerical challenge (reposted as is)")
+
+
+class AuthResponse(BaseModel):
+    """Authentication response."""
+    authenticated: bool
+    user_id: str
+    session_id: str
+    expires_at: datetime
+    message: str
+
+
+class MessageResponse(BaseModel):
+    """Replying to a simple message."""
+    message: str
+    success: bool
+    data: Optional[dict] = None
+
+
+# ============================================================
+# LIFESPAN
+# ============================================================
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Application lifecycle management."""
+    logger.info("🚀 Starting CryptoLogin FastAPI example...")
+
+    # Initialise the database
+    db_path = os.getenv("DATABASE_URL", "sqlite:///cryptologin.db").replace("sqlite:///", "")
+    storage = SQLiteStorageV2(db_path=db_path, auto_migrate=True)
+    app.state.storage = storage
+
+    # Initialise UserManager V2
+    app.state.user_manager = UserManagerV2(storage=storage, session_duration_hours=24)
+
+    logger.info(f"✅ Database initialized at: {db_path}")
+    logger.info("✅ CryptoLogin ready!")
+
+    yield
+
+    logger.info("👋 Shutting down CryptoLogin FastAPI example...")
+
+
+# ============================================================
+# APPLICATION FASTAPI
+# ============================================================
+
+app = FastAPI(
+    title="CryptoLogin Example API",
+    description="Passwordless Authentication with Zero-Knowledge-Inspired Architecture",
+    version="2.1.0",
+    lifespan=lifespan
+)
+
+# CORS (for development)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+# ============================================================
+# ROUTES
+# ============================================================
+
+@app.get("/")
+async def root():
+    """Root of the API."""
+    return {
+        "name": "CryptoLogin Example API",
+        "version": "2.1.0",
+        "docs": "/docs",
+        "status": "running"
+    }
+
+
+@app.post("/auth/register", response_model=MessageResponse)
+async def register(request: RegisterRequest):
+    """
+    Register a new user.
+
+    The client must derive the `user_id` from the `master_secret` before calling this route.
+    The server NEVER sees the `master_secret`.
+    """
+    try:
+        user_manager: UserManagerV2 = app.state.user_manager
+
+        user_id = user_manager.register_user_v2(
+            request.user_id,
+            request.user_data or {}
+        )
+
+        return MessageResponse(
+            message="User registered successfully",
+            success=True,
+            data={"user_id": user_id}
+        )
+
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        logger.error(f"Registration failed: {e}")
+        raise HTTPException(status_code=500, detail=f"Registration failed: {str(e)}")
+
+
+@app.post("/auth/login/init")
+async def login_init(request: LoginInitRequest):
+    """
+    Initiate login – returns an encrypted challenge.
+
+    The client must send this challenge back exactly as it is for verification.
+    """
+    try:
+        user_manager: UserManagerV2 = app.state.user_manager
+
+        challenge_token = user_manager.initiate_login_v2(request.user_id)
+
+        return {
+            "challenge": challenge_token,
+            "message": "Please send this challenge back to /auth/login/verify"
+        }
+
+    except Exception as e:
+        logger.error(f"Login init failed: {e}")
+        raise HTTPException(status_code=500, detail=f"Login initiation failed: {str(e)}")
+
+
+@app.post("/auth/login/verify", response_model=AuthResponse)
+async def login_verify(request: LoginVerifyRequest):
+    """
+    Verify the login – the server decrypts the challenge using Flash512.
+
+    The client sends back the encrypted challenge. The server decrypts it and verifies it.
+    """
+    try:
+        user_manager: UserManagerV2 = app.state.user_manager
+
+        session = user_manager.complete_login_v2(
+            request.user_id,
+            request.challenge_response  # Quantified challenge returned as is
+        )
+
+        return AuthResponse(
+            authenticated=True,
+            user_id=session.user_id,
+            session_id=session.user_id,
+            expires_at=session.expires_at,
+            message="Authentication successful"
+        )
+
+    except Exception as e:
+        logger.error(f"Login verify failed: {e}")
+        raise HTTPException(status_code=401, detail=f"Authentication failed: {str(e)}")
+
+
+@app.post("/auth/logout")
+async def logout(user_id: str):
+    """log a user out."""
+    try:
+        user_manager: UserManagerV2 = app.state.user_manager
+        user_manager.logout(user_id)
+        return {"message": "Logged out successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Logout failed: {str(e)}")
+
+
+# ============================================================
+# ENTRY POINT
+# ============================================================
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(
+        "app:app",
+        host="0.0.0.0",
+        port=8000,
+        reload=True,
+        log_level="info"
+    )
+```
+
+### Start the application
+
+```bash
+# Install the dependencies
+pip install fastapi uvicorn cryptologin python-dotenv
+
+# run the app
+python app.py
+```
+
+## **Backend 🚀🚀 EXAMPLE 2: Flask (Alternative)**
+
+### app_flask.py
+
+```python
+"""
+CryptoLogin - Example of integration with Flask
+"""
+
+import os
+import logging
+from flask import Flask, request, jsonify, render_template
+from dotenv import load_dotenv
+
+# Import CryptoLogin
+from cryptologin import CryptoLogin
+from cryptologin.core.user_manager_v2 import UserManagerV2
+from cryptologin.storage.sqlite_v2 import SQLiteStorageV2
+
+# Load environment variables
+load_dotenv()
+
+# Logging configuration
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# ============================================================
+# APPLICATION FLASK
+# ============================================================
 
 app = Flask(__name__)
-app.secret_key = "your-secret-key"
-auth = CryptoLogin()
+app.secret_key = os.getenv("CRYPTOLOGIN_SECRET_KEY", "dev-secret-key")
 
-@app.route('/api/register', methods=['POST'])
+# Set CryptoLogin to start at boot
+db_path = os.getenv("DATABASE_URL", "sqlite:///cryptologin.db").replace("sqlite:///", "")
+storage = SQLiteStorageV2(db_path=db_path, auto_migrate=True)
+user_manager = UserManagerV2(storage=storage, session_duration_hours=24)
+
+logger.info(f"✅ CryptoLogin initialized with database: {db_path}")
+
+
+# ============================================================
+# ROUTES
+# ============================================================
+
+@app.route("/")
+def index():
+    """Home page."""
+    return jsonify({
+        "name": "CryptoLogin Example API (Flask)",
+        "version": "2.1.0",
+        "status": "running",
+        "endpoints": {
+            "register": "POST /auth/register",
+            "login_init": "POST /auth/login/init",
+            "login_verify": "POST /auth/login/verify",
+            "logout": "POST /auth/logout"
+        }
+    })
+
+
+@app.route("/auth/register", methods=["POST"])
 def register():
-    data = request.json
-    user_id = data['user_id']
-    master_secret = data['master_secret']
+    """
+    Register a new user.
 
-    # The server generates a random challenge
-    challenge = auth.generate_challenge()
+    Body: {"user_id": "64-hex-chars", "user_data": {...}}
+    """
+    try:
+        data = request.get_json()
+        user_id = data.get("user_id")
+        user_data = data.get("user_data", {})
 
-    # The server encrypts the challenge using the master_secret
-    challenge_token = Flash512Vanguard.protect(challenge, master_secret)
+        if not user_id:
+            return jsonify({"error": "user_id is required"}), 400
 
-    # The server stores everything (the plaintext challenge is used for verification)
-    auth.store_user(user_id, challenge, challenge_token)
+        result = user_manager.register_user_v2(user_id, user_data)
 
-    # IMPORTANT: The master_secret is NOT stored
-    return jsonify({"status": "User registered"})
+        return jsonify({
+            "message": "User registered successfully",
+            "success": True,
+            "data": {"user_id": result}
+        }), 200
 
-@app.route('/api/login/init', methods=['POST'])
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 400
+    except Exception as e:
+        logger.error(f"Registration failed: {e}")
+        return jsonify({"error": f"Registration failed: {str(e)}"}), 500
+
+
+@app.route("/auth/login/init", methods=["POST"])
 def login_init():
-    user_id = request.json['user_id']
+    """
+    Start the login process.
 
-    # The server returns the encrypted token
-    challenge_token = auth.get_challenge_token(user_id)
-    return jsonify({"challenge_token": challenge_token})
+    Body: {"user_id": "64-hex-chars"}
+    """
+    try:
+        data = request.get_json()
+        user_id = data.get("user_id")
 
-@app.route('/api/login/verify', methods=['POST'])
+        if not user_id:
+            return jsonify({"error": "user_id is required"}), 400
+
+        challenge_token = user_manager.initiate_login_v2(user_id)
+
+        return jsonify({
+            "challenge": challenge_token,
+            "message": "Please send this challenge back to /auth/login/verify"
+        }), 200
+
+    except Exception as e:
+        logger.error(f"Login init failed: {e}")
+        return jsonify({"error": f"Login initiation failed: {str(e)}"}), 500
+
+
+@app.route("/auth/login/verify", methods=["POST"])
 def login_verify():
-    user_id = request.json['user_id']
-    decrypted_challenge = request.json['decrypted_challenge']
+    """
+    Check the login.
 
-    # The server compares it with the challenge stored in plain text
-    if auth.verify_challenge(user_id, decrypted_challenge):
-        session['user_id'] = user_id
-        return jsonify({"status": "Authenticated"})
+    Body: {"user_id": "64-hex-chars", "challenge_response": "encrypted-challenge"}
+    """
+    try:
+        data = request.get_json()
+        user_id = data.get("user_id")
+        challenge_response = data.get("challenge_response")
 
-    return jsonify({"error": "Invalid"}), 401
+        if not user_id or not challenge_response:
+            return jsonify({"error": "user_id and challenge_response are required"}), 400
+
+        session = user_manager.complete_login_v2(user_id, challenge_response)
+
+        return jsonify({
+            "authenticated": True,
+            "user_id": session.user_id,
+            "session_id": session.user_id,
+            "expires_at": session.expires_at.isoformat(),
+            "message": "Authentication successful"
+        }), 200
+
+    except Exception as e:
+        logger.error(f"Login verify failed: {e}")
+        return jsonify({"error": f"Authentication failed: {str(e)}"}), 401
+
+
+@app.route("/auth/logout", methods=["POST"])
+def logout():
+    """Log a user out."""
+    try:
+        data = request.get_json()
+        user_id = data.get("user_id")
+
+        if not user_id:
+            return jsonify({"error": "user_id is required"}), 400
+
+        user_manager.logout(user_id)
+        return jsonify({"message": "Logged out successfully"}), 200
+
+    except Exception as e:
+        return jsonify({"error": f"Logout failed: {str(e)}"}), 500
+
+
+# ============================================================
+# ENTRY POINT
+# ============================================================
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000, debug=True)
 ```
+
+### Start the Flask application
+
+```bash
+# Install the dependencies
+pip install flask cryptologin python-dotenv
+
+# run the app
+python app_flask.py
+```
+
+🔑 Key Points to Remember
+
+1. The customer never deciphers the challenge → They send it back exactly as it is.
+
+2. The server uses Flash512 for all → encryption, decryption and verification.
+
+3. The master_secret NEVER leaves the client → Only the user_id is sent.
 
 ### The master_secret is never exposed to the server. This is true Passwordless without password storage.
 
@@ -417,20 +742,20 @@ def login_verify():
 | NIST FIPS 197 | ✅ AES-256                               |
 | OWASP ASVS    | ✅ Argon2id                              |
 | GDPR          | ✅ Passwordless without password storage |
-| SOC2          | ✅ Audit Logs                            |
+| SOC2          | ✅ Audit Logs (in process!)              |
 |               |
 
 📊 Comparison
 
-| Feature                               | CryptoLogin | Auth0  | Firebase | Clerk  |
-| ------------------------------------- | ----------- | ------ | -------- | ------ |
-| Passwordless without password storage | ✅          | ❌     | ❌       | ❌     |
-| No Email Required                     | ✅          | ❌     | ❌       | ❌     |
-| No Password Required                  | ✅          | ❌     | ❌       | ❌     |
-| Open Source                           | ✅          | ❌     | ❌       | ❌     |
-| Self-Hosted                           | ✅          | ❌     | ❌       | ❌     |
-| Military Encryption                   | ✅          | ⚠️     | ⚠️       | ⚠️     |
-| Price                                 | 💰Free      | 💰💰💰 | 💰💰     | 💰💰💰 |
+| Feature                     | CryptoLogin | Auth0  | Firebase | Clerk  |
+| --------------------------- | ----------- | ------ | -------- | ------ |
+| Passwordless Authentication | ✅          | ❌     | ❌       | ❌     |
+| No Email Required           | ✅          | ❌     | ❌       | ❌     |
+| No Password Required        | ✅          | ❌     | ❌       | ❌     |
+| Open Source                 | ✅          | ❌     | ❌       | ❌     |
+| Self-Hosted                 | ✅          | ❌     | ❌       | ❌     |
+| Military Encryption         | ✅          | ⚠️     | ⚠️       | ⚠️     |
+| Price                       | 💰Free      | 💰💰💰 | 💰💰     | 💰💰💰 |
 
 🎯 Use Cases
 

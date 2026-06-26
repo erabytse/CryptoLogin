@@ -20,6 +20,18 @@ class RegisterRequest(BaseModel):
         if len(v) < 32:
             raise ValueError('Master secret must be at least 32 characters')
         return v
+    
+class RegisterV2Request(BaseModel):
+    """Application for registration V2."""
+    user_id: str = Field(..., description="User ID derived from master_secret (64 hex chars)")
+    user_data: Optional[Dict[str, Any]] = Field(default=None, description="User data")
+    
+    @field_validator('user_id')
+    @classmethod
+    def validate_user_id(cls, v: str) -> str:
+        if len(v) != 64 or not all(c in '0123456789abcdef' for c in v):
+            raise ValueError('user_id must be 64 hexadecimal characters')
+        return v
 
 
 class LoginInitRequest(BaseModel):
@@ -33,6 +45,16 @@ class LoginInitRequest(BaseModel):
             raise ValueError('Master secret must be at least 32 characters')
         return v
 
+class LoginInitV2Request(BaseModel):
+    """Request for login initialization V2."""
+    user_id: str = Field(..., description="User ID derived from master_secret")
+    
+    @field_validator('user_id')
+    @classmethod
+    def validate_user_id(cls, v: str) -> str:
+        if len(v) != 64 or not all(c in '0123456789abcdef' for c in v):
+            raise ValueError('user_id must be 64 hexadecimal characters')
+        return v
 
 class LoginVerifyRequest(BaseModel):
     """Request for login verification."""
@@ -45,7 +67,25 @@ class LoginVerifyRequest(BaseModel):
         if len(v) < 32:
             raise ValueError('Master secret must be at least 32 characters')
         return v
-
+    
+class LoginVerifyV2Request(BaseModel):
+    """Request for login verification V2."""
+    user_id: str = Field(..., description="User ID")
+    challenge_response: str = Field(..., description="Encrypted challenge from server")
+    
+    @field_validator('user_id')
+    @classmethod
+    def validate_user_id(cls, v: str) -> str:
+        if len(v) != 64 or not all(c in '0123456789abcdef' for c in v):
+            raise ValueError('user_id must be 64 hexadecimal characters')
+        return v
+    
+    @field_validator('challenge_response')
+    @classmethod
+    def validate_challenge(cls, v: str) -> str:
+        if len(v) < 10:  
+            raise ValueError('Invalid challenge format')
+        return v
 
 class UpdateDataRequest(BaseModel):
     """Request for updating user data."""

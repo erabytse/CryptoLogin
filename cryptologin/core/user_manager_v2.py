@@ -49,7 +49,7 @@ class UserManagerV2:
     Key features:
     - Server never sees the master secret
     - Client derives user_id locally using PBKDF2
-    - Authentication via challenge-response (client decrypts challenge)
+    - Authentication via challenge-response (server decrypts challenge)
     - Backward compatible with V1
     """
     
@@ -126,9 +126,8 @@ class UserManagerV2:
             if not salt:
                 salt = self.crypto_client.generate_challenge(32)
             
-            # Encrypt challenge with the secret (using Flash512)
-            # The server stores the encrypted challenge, not the plain text
-            # The client must decrypt it to prove knowledge of the secret
+            # Encrypt challenge with the salt (using Flash512)
+            # The server stores the encrypted challenge
             challenge_token = self.crypto_engine.encrypt_data(challenge, salt)
             
             # Create user record
@@ -160,10 +159,10 @@ class UserManagerV2:
     
     def initiate_login_v2(self, user_id: str) -> str:
         """
-        Initiate login - returns an encrypted challenge for the client to decrypt.
+        Initiate login - returns an encrypted challenge for the client.
         
-        The client must decrypt the challenge with the master secret and
-        send it back for verification.
+        The client receives the encrypted challenge and sends it back.
+        The server decrypts it for verification.
         
         Args:
             user_id: User ID
@@ -185,7 +184,7 @@ class UserManagerV2:
             # Generate new challenge
             challenge = self.crypto_client.generate_challenge(32)
             
-            # Encrypt challenge with the salt (derived from secret)
+            # Encrypt challenge with the salt
             challenge_token = self.crypto_engine.encrypt_data(challenge, record.salt)
             
             # Update record
@@ -206,17 +205,17 @@ class UserManagerV2:
     def complete_login_v2(
         self,
         user_id: str,
-        challenge_response: str  # Decrypted challenge from client
+        encrypted_challenge: str  # Encrypted challenge from client
     ) -> UserSession:
         """
-        Complete login - verify decrypted challenge.
+        Complete login - decrypt and verify challenge.
         
-        The client decrypts the challenge using the master secret and
-        sends it back. The server verifies it matches the stored plaintext.
+        The client sends back the encrypted challenge.
+        The server decrypts it using Flash512 and verifies it.
         
         Args:
             user_id: User ID
-            challenge_response: Decrypted challenge from client
+            encrypted_challenge: Encrypted challenge from client
             
         Returns:
             UserSession: Created session
@@ -233,11 +232,25 @@ class UserManagerV2:
             if not record:
                 raise UserNotFoundError(f"User {user_id[:16]}... not found")
             
-            # Verify the decrypted challenge matches the stored one
-            if not record.challenge:
+            if not record.challenge_token:
                 raise AuthenticationError("No challenge found for user")
             
-            if not hmac.compare_digest(record.challenge, challenge_response):
+            if not record.salt:
+                raise AuthenticationError("No salt found for user")
+            
+            # CORRECTION: Decrypt the challenge using Flash512
+            # The server decrypts the encrypted challenge using the stored salt
+            try:
+                decrypted_challenge = self.crypto_engine.decrypt_data(
+                    encrypted_challenge,
+                    record.salt
+                )
+            except Exception as e:
+                logger.error("Decryption failed: %s", e)
+                raise AuthenticationError("Failed to decrypt challenge")
+            
+            # Verify the decrypted challenge matches the stored one
+            if not hmac.compare_digest(record.challenge, decrypted_challenge):
                 raise AuthenticationError("Invalid challenge response")
             
             # Create session
@@ -258,7 +271,7 @@ class UserManagerV2:
         except Exception as e:
             logger.error("Login completion failed: %s", e)
             raise UserManagerError(f"Login completion failed: {e}")
-    
+        
     # ============================================================
     # 3. DATA VAULT - V2
     # ============================================================

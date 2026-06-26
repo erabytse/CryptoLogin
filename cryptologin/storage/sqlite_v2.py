@@ -18,20 +18,15 @@ logger = logging.getLogger(__name__)
 class SQLiteStorageV2(StorageInterface):
     """
     SQLite Storage - V2 with Zero-Knowledge fields.
-    
-    Schema changes from V1:
-    - Added 'challenge' field (plain challenge for HMAC)
-    - Added 'salt' field (salt for key derivation)
-    - 'challenge_token' kept for backward compatibility
     """
     
     # V2 Schema
     CREATE_TABLE_QUERY = """
     CREATE TABLE IF NOT EXISTS users (
         user_id TEXT PRIMARY KEY,
-        challenge_token TEXT,          -- V1: Encrypted challenge (deprecated)
-        challenge TEXT,                -- V2: Plain challenge for HMAC
-        salt TEXT,                     -- V2: Salt for key derivation
+        challenge_token TEXT,
+        challenge TEXT,
+        salt TEXT,
         user_data TEXT DEFAULT '{}',
         vault_data TEXT,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -40,11 +35,16 @@ class SQLiteStorageV2(StorageInterface):
     );
     """
     
-    # Migration query for existing users
-    MIGRATE_V1_TO_V2 = """
-    UPDATE users 
-    SET challenge = challenge_token, salt = ''
-    WHERE challenge_token IS NOT NULL AND challenge IS NULL;
+    MIGRATE_ADD_CHALLENGE = """
+    ALTER TABLE users ADD COLUMN challenge TEXT;
+    """
+    
+    MIGRATE_ADD_SALT = """
+    ALTER TABLE users ADD COLUMN salt TEXT;
+    """
+    
+    MIGRATE_COPY_DATA = """
+    UPDATE users SET challenge = challenge_token WHERE challenge IS NULL;
     """
     
     CREATE_INDEXES = [
@@ -118,15 +118,28 @@ class SQLiteStorageV2(StorageInterface):
         
         try:
             with self._get_connection() as conn:
-                # Create table with V2 schema
+                # 1. Create table if not exists
                 conn.execute(self.CREATE_TABLE_QUERY)
                 
-                # Create indexes
+                # 2. Check if columns exist and add them if needed
+                cursor = conn.execute("PRAGMA table_info(users)")
+                columns = [row['name'] for row in cursor.fetchall()]
+                
+                if 'challenge' not in columns:
+                    logger.info("Adding 'challenge' column...")
+                    conn.execute(self.MIGRATE_ADD_CHALLENGE)
+                
+                if 'salt' not in columns:
+                    logger.info("Adding 'salt' column...")
+                    conn.execute(self.MIGRATE_ADD_SALT)
+                
+                # 3. Migrate existing data
+                if 'challenge' in columns:
+                    conn.execute(self.MIGRATE_COPY_DATA)
+                
+                # 4. Create indexes
                 for index in self.CREATE_INDEXES:
                     conn.execute(index)
-                
-                # Migrate existing users to V2
-                conn.execute(self.MIGRATE_V1_TO_V2)
                 
                 conn.commit()
                 logger.info("V2 migration completed successfully")

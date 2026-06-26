@@ -91,6 +91,7 @@ app.add_middleware(
         "http://localhost:8000",
         "https://erabytse.github.io/cryptologin-website/",
         "https://api.docudeeper.com",
+        "*", 
     ] + settings.ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
