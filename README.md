@@ -2,7 +2,7 @@
 
 # ![Passwordless Authentication without Password Storage](https://raw.githubusercontent.com/erabytse/CryptoLogin/main/images/logo.png)
 
-## _Zero-Knowledge-Inspired · Passwordless Authentication · Military-Grade Encryption_
+## _Server-Side Secret-Free · Zero-Storage Authentication · Zero-Knowledge-Inspired · Passwordless Authentication · Military-Grade Encryption_
 
 **The Future of Authentication is Here. No Email. No Password. Just Your Secret.**
 
@@ -42,6 +42,8 @@ The server never stores your secret. Your secret never leaves your device.
 ### ✅ What it actually is
 
 - A **Passwordless Authentication System with Encrypted Challenges**.
+- A **Server-Side Secret-Free Authentication System**.
+- A **Zero-Storage Authentication System**.
 - The `master_secret` is **never stored** in the database.
 - During login, no secret travels over the network.
 - Security relies on the fact that **only the client can decrypt the `challenge_token`**.
@@ -64,7 +66,7 @@ To crack it, they must perform offline brute-force:
 
 ---
 
-## 🛡️ Powered by Flash512-Vanguard
+## 🛡️ Powered by industry standards: AES-256-GCM for encryption, Argon2id for key derivation."
 
 CryptoLogin is built on top of [Flash512-Vanguard](https://github.com/erabytse/Flash512-vanguard), a military-grade encryption engine:
 
@@ -150,6 +152,10 @@ pip install -e .
 5. Server verifies that the plaintext `challenge` matches the original challenge.
 
 **The `master_secret` is never transmitted over the network.** Only the encrypted challenge and the derived `user_id` are exchanged.
+
+## "Not your keys, not your crypto. Not your secret, not your account." very important
+
+## "CryptoLogin is not for everyone. If a user loses their master_secret, they are locked out forever. There is no ## 'Forgot Password' email flow, because the server knows nothing. This is the ultimate trade-off: Absolute ## Security vs. Convenience. It's like a Bitcoin wallet."
 
 ### Why This Is Secure
 
@@ -251,7 +257,7 @@ async function login(masterSecret) {
   });
   const { challenge } = await initResponse.json();
 
-  // 3. Send the encrypted challenge back (DO NOT DECRYPT)
+  // 3. Send the plaintext challenge back
   const verifyResponse = await fetch("/auth/login/verify_v2", {
     method: "POST",
     body: JSON.stringify({
