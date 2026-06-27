@@ -1,6 +1,6 @@
 <div align="center">
 
-# ![Passwordless Authentication without Password Storage](https://raw.githubusercontent.com/erabytse/CryptoLogin/main/images/logo.png)
+# ![Server-Side Secret-Free · Zero-Storage Authentication](https://raw.githubusercontent.com/erabytse/CryptoLogin/main/images/logo.png)
 
 ## _Server-Side Secret-Free · Zero-Storage Authentication · Zero-Knowledge-Inspired · Passwordless Authentication · Military-Grade Encryption_
 
@@ -153,9 +153,19 @@ pip install -e .
 
 **The `master_secret` is never transmitted over the network.** Only the encrypted challenge and the derived `user_id` are exchanged.
 
-## "Not your keys, not your crypto. Not your secret, not your account." very important
+---
 
-## "CryptoLogin is not for everyone. If a user loses their master_secret, they are locked out forever. There is no ## 'Forgot Password' email flow, because the server knows nothing. This is the ultimate trade-off: Absolute ## Security vs. Convenience. It's like a Bitcoin wallet."
+<div style="color: orange; border-left: 5px solid orange">
+
+> # Warning
+
+> ### "Not your keys, not your crypto. Not your secret, not your account." Very important!
+
+> ### "**CryptoLogin** is not for everyone. If a user loses their **master_secret**, they are locked out forever. There is no 'Forgot Password' email option because the server knows nothing. This is the ultimate trade-off: absolute security vs. convenience. It's like a Bitcoin wallet."
+
+</div>
+
+---
 
 ### Why This Is Secure
 
@@ -269,6 +279,12 @@ async function login(masterSecret) {
   return verifyResponse.json();
 }
 ```
+
+> ## **NOTE**
+>
+> ### Obtain the **[cryptologin-client](https://github.com/erabytse/cryptologin-client)** 📍
+
+---
 
 **Backend 🚀 EXAMPLE 1: FastAPI (Recommended)**
 
