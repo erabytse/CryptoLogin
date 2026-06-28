@@ -154,104 +154,92 @@ class UserManagerV2:
             raise UserManagerError(f"Registration failed: {e}")
     
     # ============================================================
-    # 2. LOGIN - V2 (Zero-Knowledge)
+    # 2. LOGIN - V2 (Zero-Knowledge with HMAC)
     # ============================================================
-    
+
     def initiate_login_v2(self, user_id: str) -> str:
         """
-        Initiate login - returns an encrypted challenge for the client.
-        
-        The client receives the encrypted challenge and sends it back.
-        The server decrypts it for verification.
+        Initiate login - returns a plaintext challenge for the client.
+        The client will compute HMAC(challenge, user_id) and send it back.
         
         Args:
             user_id: User ID
             
         Returns:
-            str: Encrypted challenge token
-            
-        Raises:
-            UserNotFoundError: If user doesn't exist
-            UserManagerError: On error
+            str: Plaintext challenge (64 hex characters)
         """
-        logger.info("Initiating login (V2)...")
+        logger.info(f"Initiating V2 login for user: {user_id[:16]}...")
         
         try:
             record = self.storage.get_user(user_id)
             if not record:
                 raise UserNotFoundError(f"User {user_id[:16]}... not found")
             
-            # Generate new challenge
+            # Generate a random challenge (64 hex chars = 32 bytes)
             challenge = self.crypto_client.generate_challenge(32)
             
-            # Encrypt challenge with the salt
-            challenge_token = self.crypto_engine.encrypt_data(challenge, record.salt)
-            
-            # Update record
-            record.challenge = challenge
-            record.challenge_token = challenge_token
+            # Store the challenge for verification
+            record.pending_challenge = challenge
             record.updated_at = datetime.now()
             self.storage.save_user(record)
             
-            logger.debug("Challenge generated for user: %s...", user_id[:16])
-            return challenge_token
+            logger.info(f"Challenge generated for user: {user_id[:16]}...")
             
-        except UserNotFoundError:
+            # Return plaintext challenge (client will compute HMAC)
+            return challenge
+            
+        except (UserNotFoundError, UserManagerError):
             raise
         except Exception as e:
-            logger.error("Login initiation failed: %s", e)
+            logger.error(f"Login initiation failed: {e}")
             raise UserManagerError(f"Login initiation failed: {e}")
-    
+
     def complete_login_v2(
         self,
         user_id: str,
-        encrypted_challenge: str  # Encrypted challenge from client
+        challenge_response: str  # HMAC from client
     ) -> UserSession:
         """
-        Complete login - decrypt and verify challenge.
+        Complete login - verify HMAC response from client.
         
-        The client sends back the encrypted challenge.
-        The server decrypts it using Flash512 and verifies it.
+        The client computed: HMAC(challenge, user_id)
+        The server verifies it using the same user_id.
         
         Args:
             user_id: User ID
-            encrypted_challenge: Encrypted challenge from client
+            challenge_response: HMAC signature from client (64 hex chars)
             
         Returns:
             UserSession: Created session
             
         Raises:
-            UserNotFoundError: If user doesn't exist
-            AuthenticationError: If challenge doesn't match
-            UserManagerError: On error
+            AuthenticationError: If HMAC doesn't match
         """
-        logger.info("Completing login (V2)...")
+        logger.info(f"Completing V2 login for user: {user_id[:16]}...")
         
         try:
             record = self.storage.get_user(user_id)
             if not record:
                 raise UserNotFoundError(f"User {user_id[:16]}... not found")
             
-            if not record.challenge_token:
-                raise AuthenticationError("No challenge found for user")
+            if not record.pending_challenge:
+                raise AuthenticationError("No pending challenge. Call initiate_login_v2 first.")
             
-            if not record.salt:
-                raise AuthenticationError("No salt found for user")
+            # Server computes the expected HMAC
+            expected_hmac = self.crypto_client.compute_hmac(
+                user_id,  # Use user_id as HMAC key (not master_secret!)
+                record.pending_challenge
+            )
             
-            # CORRECTION: Decrypt the challenge using Flash512
-            # The server decrypts the encrypted challenge using the stored salt
-            try:
-                decrypted_challenge = self.crypto_engine.decrypt_data(
-                    encrypted_challenge,
-                    record.salt
-                )
-            except Exception as e:
-                logger.error("Decryption failed: %s", e)
-                raise AuthenticationError("Failed to decrypt challenge")
-            
-            # Verify the decrypted challenge matches the stored one
-            if not hmac.compare_digest(record.challenge, decrypted_challenge):
+            # Verify the client's HMAC
+            if not hmac.compare_digest(expected_hmac, challenge_response):
+                logger.warning(f"Invalid HMAC for user: {user_id[:16]}...")
                 raise AuthenticationError("Invalid challenge response")
+            
+            # Clear the pending challenge
+            record.pending_challenge = None
+            record.last_activity_at = datetime.now()
+            self.storage.save_user(record)
             
             # Create session
             session = UserSession(
@@ -260,16 +248,14 @@ class UserManagerV2:
             )
             self._sessions[user_id] = session
             
-            # Update activity
-            self.storage.update_user_activity(user_id)
+            logger.info(f"User authenticated successfully (V2): {user_id[:16]}...")
             
-            logger.info("User authenticated successfully (V2): %s...", user_id[:16])
             return session
             
         except (UserNotFoundError, AuthenticationError):
             raise
         except Exception as e:
-            logger.error("Login completion failed: %s", e)
+            logger.error(f"Login completion failed: {e}")
             raise UserManagerError(f"Login completion failed: {e}")
         
     # ============================================================
