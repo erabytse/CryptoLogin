@@ -178,8 +178,8 @@ class UserManagerV2:
             # Generate a random challenge (64 hex chars = 32 bytes)
             challenge = self.crypto_client.generate_challenge(32)
             
-            # Store the challenge for verification
-            record.pending_challenge = challenge
+            # ✅ Store the challenge in record.challenge (not pending_challenge)
+            record.challenge = challenge
             record.updated_at = datetime.now()
             self.storage.save_user(record)
             
@@ -222,13 +222,14 @@ class UserManagerV2:
             if not record:
                 raise UserNotFoundError(f"User {user_id[:16]}... not found")
             
-            if not record.pending_challenge:
+            # ✅ Use record.challenge (not pending_challenge)
+            if not record.challenge:
                 raise AuthenticationError("No pending challenge. Call initiate_login_v2 first.")
             
             # Server computes the expected HMAC
             expected_hmac = self.crypto_client.compute_hmac(
                 user_id,  # Use user_id as HMAC key (not master_secret!)
-                record.pending_challenge
+                record.challenge
             )
             
             # Verify the client's HMAC
@@ -236,8 +237,8 @@ class UserManagerV2:
                 logger.warning(f"Invalid HMAC for user: {user_id[:16]}...")
                 raise AuthenticationError("Invalid challenge response")
             
-            # Clear the pending challenge
-            record.pending_challenge = None
+            # ✅ Clear the challenge after successful login
+            record.challenge = None
             record.last_activity_at = datetime.now()
             self.storage.save_user(record)
             

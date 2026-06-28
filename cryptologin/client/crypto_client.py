@@ -6,8 +6,9 @@ Pure Python implementation for derivation and HMAC
 This module implements the client-side cryptographic operations
 that will run in the browser via WebAssembly.
 """
-import hashlib
+from asyncio.log import logger
 import hmac
+import hashlib
 import secrets
 from typing import Tuple, Optional
 import base64
@@ -224,3 +225,22 @@ def from_hex(hex_string: str) -> bytes:
 def generate_salt(length: int = 32) -> str:
     """Generate a random salt."""
     return secrets.token_hex(length)
+
+def compute_hmac(self, key: str, message: str) -> str:
+    """
+    Compute HMAC-SHA256 of a message using the given key.
+    
+    Args:
+        key: The key (user_id in V2)
+        message: The message to sign (challenge)
+        
+    Returns:
+        str: HMAC signature (64 hex characters)
+    """
+    key_bytes = key.encode('utf-8')
+    message_bytes = message.encode('utf-8')
+    
+    signature = hmac.new(key_bytes, message_bytes, hashlib.sha256).hexdigest()
+    
+    logger.debug(f"HMAC computed: {signature[:16]}...")
+    return signature
