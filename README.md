@@ -306,4 +306,5 @@ MIT © [erabytse](https://github.com/erabytse?spm=a2ty_o01.29997173.0.0.7c0455fb
 ---
 
 The future of auth isn't about building better honeypots. It's about removing the honey.
+
 ⭐ [Star on GitHub](https://github.com/erabytse/CryptoLogin?spm=a2ty_o01.29997173.0.0.7c0455fbMU0RcW) · [📦 PyPI](https://pypi.org/project/cryptologin) · [🌐 Demo](https://erabytse.github.io/cryptologin-website)
