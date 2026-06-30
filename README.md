@@ -47,6 +47,21 @@ CREATE TABLE users (
 
 **_Authentication flow_**
 
+```mermaid
+sequenceDiagram
+    participant Client
+    participant Server
+
+    Client->>Client: Derive user_id from master_secret (PBKDF2)
+    Client->>Server: POST /auth/login/init {user_id}
+    Server->>Server: Generate random challenge
+    Server-->>Client: Return challenge
+    Client->>Client: Compute HMAC(challenge, user_id)
+    Client->>Server: POST /auth/login/verify {user_id, hmac}
+    Server->>Server: Verify HMAC
+    Server-->>Client: Return session_id
+```
+
 ```test
 ┌──────────┐                              ┌──────────┐
 │  Client  │                              │  Server  │
