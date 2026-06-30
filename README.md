@@ -1,6 +1,6 @@
 <div align="center">
 
-# ![Server-Side Secret-Free](https://raw.githubusercontent.com/erabytse/CryptoLogin/main/images/logo.png)
+# ![Server-Side Secret-Free](https://raw.githubusercontent.com/erabytse/CryptoLogin/main/logo.png)
 
 [![PyPI version](https://img.shields.io/pypi/v/cryptologin.svg)](https://pypi.org/project/cryptologin/)
 [![Python](https://img.shields.io/pypi/pyversions/cryptologin.svg)](https://pypi.org/project/cryptologin/)
