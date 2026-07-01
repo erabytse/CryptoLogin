@@ -2,7 +2,7 @@
 CryptoLogin - Zero-Knowledge-Inspired Passwordless Authentication
 """
 
-__version__ = "2.1.0"
+__version__ = "2.1.6"
 __author__ = "erabytse"
 __license__ = "MIT"
 

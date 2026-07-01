@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CryptoLogin Web App Example</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #24323A 0%, #2c474d 100%);
+            color: #F5F5F5;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 500px;
+            width: 100%;
+        }
+        
+        .card {
+            background: rgba(44, 71, 77, 0.9);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #00D4FF;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #D8D8DD;
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #F5F5F5;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            background: #1a2329;
+            border: 2px solid #A2F3EB;
+            border-radius: 8px;
+            color: #F5F5F5;
+            font-size: 16px;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #F5A623;
+        }
+        
+        .hint {
+            font-size: 12px;
+            color: #D8D8DD;
+            margin-top: 5px;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: #F5A623;
+            color: #1a2329;
+        }
+        
+        .btn-primary:hover {
+            background: #D4891B;
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: #F5F5F5;
+            border: 2px solid #A2F3EB;
+        }
+        
+        .btn-secondary:hover {
+            background: #A2F3EB;
+            color: #1a2329;
+        }
+        
+        .flash {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .flash.success {
+            background: rgba(76, 175, 80, 0.2);
+            border-left: 4px solid #4CAF50;
+        }
+        
+        .flash.error {
+            background: rgba(255, 82, 82, 0.2);
+            border-left: 4px solid #FF5252;
+        }
+        
+        .flash.warning {
+            background: rgba(255, 193, 7, 0.2);
+            border-left: 4px solid #FFC107;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>🔐 CryptoLogin</h1>
+            <p class="subtitle">Web App Example</p>
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            <form action="/register" method="POST">
+                <div class="form-group">
+                    <label for="master_secret">Master Secret</label>
+                    <input 
+                        type="password" 
+                        id="master_secret" 
+                        name="master_secret" 
+                        placeholder="Enter your master secret (min 32 chars)"
+                        required
+                        minlength="32"
+                    >
+                    <p class="hint">🔒 This secret never leaves your browser</p>
+                </div>
+                
+                <div class="button-group">
+                    <button type="submit" class="btn-primary">Register</button>
+                </div>
+            </form>
+            
+            <form action="/login" method="POST" style="margin-top: 20px;">
+                <div class="form-group">
+                    <label for="master_secret_login">Master Secret</label>
+                    <input 
+                        type="password" 
+                        id="master_secret_login" 
+                        name="master_secret" 
+                        placeholder="Enter your master secret"
+                        required
+                        minlength="32"
+                    >
+                </div>
+                
+                <div class="button-group">
+                    <button type="submit" class="btn-secondary">Login</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

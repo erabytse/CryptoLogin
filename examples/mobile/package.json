@@ -1,0 +1,22 @@
+{
+  "name": "cryptologin-mobile-example",
+  "version": "1.0.0",
+  "description": "React Native example for CryptoLogin",
+  "main": "App.js",
+  "scripts": {
+    "start": "react-native start",
+    "android": "react-native run-android",
+    "ios": "react-native run-ios"
+  },
+  "dependencies": {
+    "react": "18.2.0",
+    "react-native": "0.72.0",
+    "cryptologin-client": "^1.2.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.0",
+    "@babel/preset-env": "^7.20.0",
+    "@babel/runtime": "^7.20.0",
+    "metro-react-native-babel-preset": "0.76.8"
+  }
+}
