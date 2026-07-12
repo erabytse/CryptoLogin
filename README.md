@@ -253,7 +253,7 @@ cryptologin/
 **Try CryptoLogin right now:**
 
 - 🌐 [Live Demo: cryptologin-website](https://erabytse.github.io/cryptologin-website/)
-- 🔌 [API Endpoint: https://api.docudeeper.com/api/v1](https://api.docudeeper.com/api/v1)
+- 🔌 [API Endpoint: https://api.docudeeper.com/api/v1](https://api.docudeeper.com/)
 
 ---
 
