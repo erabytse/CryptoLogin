@@ -63,16 +63,12 @@ def login():
         return redirect(url_for('index'))
     
     try:
-        # Derive user_id
         user_id = crypto_client.derive_user_id(master_secret)
-        # Get challenge
         challenge = user_manager.initiate_login_v2(user_id)
-        # Compute HMAC
         hmac_signature = compute_hmac(user_id, challenge)
-        # Verify login
         auth_session = user_manager.complete_login_v2(user_id, hmac_signature)
         
-        # ✅ CORRECTION: UserManagerV2 keys sessions by user_id, not session_id
+        # ✅ We store user_id and expires_at, NOT session_id
         session['user_id'] = user_id
         session['expires_at'] = auth_session.expires_at.isoformat()
         
@@ -82,16 +78,14 @@ def login():
         flash(f'❌ Login failed: {str(e)}', 'error')
         return redirect(url_for('index'))
 
-@app.route('/dashboard')
 def dashboard():
     """Protected dashboard"""
     if 'user_id' not in session:
         flash('Please login first', 'warning')
         return redirect(url_for('index'))
     
-    # Validate session
     try:
-        # ✅ CORRECTION: validate_session expects user_id, not session_id
+        # ✅ 'validate_session' expects a 'user_id', not a 'session_id'
         is_valid = user_manager.validate_session(session['user_id'])
         if not is_valid:
             session.clear()
@@ -107,7 +101,7 @@ def dashboard():
 @app.route('/logout')
 def logout():
     """Logout user"""
-    # ✅ CORRECTION: Check for user_id and pass it to logout()
+    # ✅ We check and pass the user_id to logout()
     if 'user_id' in session:
         try:
             user_manager.logout(session['user_id'])

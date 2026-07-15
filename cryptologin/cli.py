@@ -360,10 +360,8 @@ def cmd_login(args):
 
         info("Initiating login...")
         
-        # ✅ CORRECTION 1 : Le bon chemin d'importation
         from cryptologin.client.crypto_client import CryptoClient
         
-        # ✅ CORRECTION 2 : Appel direct de la classmethod
         user_id = CryptoClient.derive_user_id(secret)
         
         # Get challenge
@@ -385,19 +383,19 @@ def cmd_login(args):
         print()
         success("Login successful")
         print()
-        print(f"  {Colors.BOLD}User ID:{Colors.RESET}    {format_user_id(session.user_id)}")
-        print(f"  {Colors.BOLD}Session ID:{Colors.RESET} {format_user_id(session.session_id)}")
-        print(f"  {Colors.BOLD}Expires:{Colors.RESET}    {session.expires_at}")
+        print(f"  {Colors.BOLD}User ID:{Colors.RESET}      {format_user_id(session.user_id)}")
+        # ✅ In V2, the user_id is used as the session key. There is no separate session_id.
+        print(f"  {Colors.BOLD}Session Active:{Colors.RESET} Yes (Key: {format_user_id(session.user_id)})")
+        print(f"  {Colors.BOLD}Expires:{Colors.RESET}       {session.expires_at}")
         print()
         if args.json:
             print(json.dumps({
                 "success": True,
                 "user_id": session.user_id,
-                "session_id": session.session_id,
                 "expires_at": session.expires_at.isoformat()
             }, indent=2))
         else:
-            info(f"Use this session ID as Bearer token: Bearer {session.session_id}")
+            info(f"Use this User ID as Bearer token for V2: Bearer {session.user_id}")
         return ExitCode.SUCCESS
         
     except ValueError as e:

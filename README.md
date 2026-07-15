@@ -5,6 +5,7 @@
 [![PyPI version](https://img.shields.io/pypi/v/cryptologin.svg)](https://pypi.org/project/cryptologin/)
 [![Python](https://img.shields.io/pypi/pyversions/cryptologin.svg)](https://pypi.org/project/cryptologin/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![npm](https://img.shields.io/npm/v/cryptologin-client.svg)](https://www.npmjs.com/package/cryptologin-client)
 
 <!--[![Tests](https://github.com/erabytse/CryptoLogin/actions/workflows/test.yml/badge.svg)](https://github.com/erabytse/CryptoLogin/actions)-->
 
@@ -324,5 +325,4 @@ The future of auth isn't about building better honeypots. It's about removing th
 
 ⭐ [Star on GitHub](https://github.com/erabytse/CryptoLogin?spm=a2ty_o01.29997173.0.0.7c0455fbMU0RcW) · [📦 PyPI](https://pypi.org/project/cryptologin) · [🌐 Demo](https://erabytse.github.io/cryptologin-website)
 
-
->"If you believe in local-first, privacy-respecting AI infrastructure, consider starring this repository. It helps the PoetryCoding movement grow. ⭐"
+> "If you believe in local-first, privacy-respecting AI infrastructure, consider starring this repository. It helps the PoetryCoding movement grow. ⭐"
