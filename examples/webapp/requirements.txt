@@ -1,2 +1,2 @@
 Flask==3.0.0
-cryptologin==2.1.6
+cryptologin==2.1.7
