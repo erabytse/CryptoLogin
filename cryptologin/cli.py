@@ -319,32 +319,31 @@ def cmd_register(args):
         auth = get_auth_instance(args.db)
 
         info("Registering new user...")
-
-        # Derive user_id client-side
-        from cryptologin.core.crypto_client import CryptoClient
-        crypto = CryptoClient()
-        user_id = crypto.derive_user_id(secret)
-
+        
+        # ✅ CORRECTION 1 : Le bon chemin d'importation (client, pas core)
+        from cryptologin.client.crypto_client import CryptoClient
+        
+        # ✅ CORRECTION 2 : Appel direct de la classmethod (pas besoin d'instancier)
+        user_id = CryptoClient.derive_user_id(secret)
+        
         # Register
         auth.register_user_v2(user_id, data or {})
-
+        
         print()
         success("User registered successfully")
         print()
         print(f"  {Colors.BOLD}User ID:{Colors.RESET}  {format_user_id(user_id)}")
         print(f"  {Colors.BOLD}Database:{Colors.RESET} {args.db}")
         print()
-
         if args.json:
             print(json.dumps({
                 "success": True,
                 "user_id": user_id,
                 "database": args.db
             }, indent=2))
-
         warning("Save your master secret securely. It cannot be recovered!")
         return ExitCode.SUCCESS
-
+        
     except ValueError as e:
         error(f"Validation error: {e}")
         return ExitCode.INVALID_USAGE
@@ -360,16 +359,17 @@ def cmd_login(args):
         auth = get_auth_instance(args.db)
 
         info("Initiating login...")
-
-        # Derive user_id
-        from cryptologin.core.crypto_client import CryptoClient
-        crypto = CryptoClient()
-        user_id = crypto.derive_user_id(secret)
-
+        
+        # ✅ CORRECTION 1 : Le bon chemin d'importation
+        from cryptologin.client.crypto_client import CryptoClient
+        
+        # ✅ CORRECTION 2 : Appel direct de la classmethod
+        user_id = CryptoClient.derive_user_id(secret)
+        
         # Get challenge
         challenge = auth.initiate_login_v2(user_id)
         info(f"Challenge: {format_user_id(challenge)}")
-
+        
         # Compute HMAC (simulate client)
         import hmac
         import hashlib
@@ -378,10 +378,10 @@ def cmd_login(args):
             challenge.encode('utf-8'),
             hashlib.sha256
         ).hexdigest()
-
+        
         # Complete login
         session = auth.complete_login_v2(user_id, client_hmac)
-
+        
         print()
         success("Login successful")
         print()
@@ -389,7 +389,6 @@ def cmd_login(args):
         print(f"  {Colors.BOLD}Session ID:{Colors.RESET} {format_user_id(session.session_id)}")
         print(f"  {Colors.BOLD}Expires:{Colors.RESET}    {session.expires_at}")
         print()
-
         if args.json:
             print(json.dumps({
                 "success": True,
@@ -399,9 +398,8 @@ def cmd_login(args):
             }, indent=2))
         else:
             info(f"Use this session ID as Bearer token: Bearer {session.session_id}")
-
         return ExitCode.SUCCESS
-
+        
     except ValueError as e:
         error(f"Validation error: {e}")
         return ExitCode.INVALID_USAGE
