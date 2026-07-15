@@ -15,7 +15,7 @@ try:
     from flash512 import Flash512Vanguard
 except ImportError as e:
     raise ImportError(
-        "Flash512-Vanguard is required. Please install: pip install flash512-vanguard==2.1.1"
+        "Flash512-Vanguard is required. Please install: pip install flash512-vanguard>= 3.0.1"
     ) from e
 
 from .constants import MIN_SECRET_LENGTH, CHALLENGE_LENGTH
@@ -75,20 +75,37 @@ class CryptoEngine:
             raise CryptoError(f"User ID derivation failed: {e}")
     
     def encrypt_data(self, plaintext: str, master_secret: str) -> str:
+        """
+        Encrypt the data, ensuring it is in bytes format 
+        for compatibility with flash512-vanguard >= 3.0.1
+        """
         self._validate_secret(master_secret)
         if not plaintext:
             raise ValueError("Plaintext cannot be empty")
         try:
-            return Flash512Vanguard.protect(plaintext, master_secret)
+            # ✅ Force byte-based encoding if it is a string
+            plaintext_bytes = plaintext.encode('utf-8') if isinstance(plaintext, str) else plaintext
+            
+            return Flash512Vanguard.protect(plaintext_bytes, master_secret)
         except Exception as e:
             raise CryptoError(f"Encryption failed: {e}")
     
     def decrypt_data(self, token: str, master_secret: str) -> str:
+        """
+        Decrypt data and ensure it returns a string
+        """
         self._validate_secret(master_secret)
         if not token:
             raise ValueError("Token cannot be empty")
         try:
-            return Flash512Vanguard.open(token, master_secret)
+            # Flash512 v3.x returns bytes, which are properly decoded into strings
+            decrypted_data = Flash512Vanguard.open(token, master_secret)
+            
+            # ✅ Secure decoding of bytes to a string
+            if isinstance(decrypted_data, bytes):
+                return decrypted_data.decode('utf-8')
+            return str(decrypted_data)
+            
         except Exception as e:
             error_msg = str(e).lower()
             if "integrity" in error_msg or "tamper" in error_msg or "verify" in error_msg:
